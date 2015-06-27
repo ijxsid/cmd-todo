@@ -7,16 +7,31 @@ import json
 todobase = firebase.FirebaseApplication('https://shining-heat-5315.firebaseio.com/', None)
 
 # TODO: Better Modelling for todos.
+# TODO: Better Way to Add todos.
+# TODO: Better Way to Edit Todos.
+# TODO: Filtering Todos
+# TODO: Rewards and Stuff.
+# TODO: User Dashboard.
+
 def get_todos():
     todos = todobase.get('/todos', None)
     for key in todos.keys():
         todo = todos[key]
-        puts( colored.red(str(todo['bounty'])) + " : " + todo['task'] )
+        puts( key + " : "+colored.blue(str(todo['bounty'])) + " : " + todo['task'] )
 
+def get_todo(name):
+    todo = todobase.get('/todos', name)
+    if todo is not None:
+        puts ( colored.blue(str(todo['bounty'])) + " : " + todo['task'] )
+    else:
+        puts( colored.red('404: Nothing Found'))
 
 def add_todo(task, points=1):
+    todos = todobase.get('/todos', None)
+    N = 0 if todos is None else len(todos.keys())
+    name = 'todo' + str(N+1)
     todo = {'task': task, 'bounty': points}
-    res = todobase.post('/todos', todo)
+    res = todobase.put('/todos', name, todo)
     print res
 
 
@@ -38,10 +53,11 @@ def main():
         bounty = int(args.add[1])
         add_todo(task, bounty)
 
-    if args.get == None:
+    elif args.get == None:
         get_todos()
 
-
+    elif args.get is not None:
+        get_todo(args.get)
 
 
 if __name__ == '__main__':
