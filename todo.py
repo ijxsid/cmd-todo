@@ -15,6 +15,14 @@ todobase = firebase.FirebaseApplication('https://shining-heat-5315.firebaseio.co
 # TODO: Rewards and Stuff.
 # TODO: User Dashboard.
 
+def foreach(collection, callback):
+    for key in collection.keys():
+        item = collection[key]
+        callback(item, key)
+
+def fetch_todos(name=None):
+    return todobase.get('/todos', name)
+
 def calculate_points(todos):
     total_points = 0
     earned_points = 0
@@ -53,28 +61,30 @@ def get_unique_count():
     todobase.put('/counter', 'count', count)
     return count
 
+def print_todo_item(item, key=None):
+    if item is not None:
+        donestring = colored.green((u'\u2713').encode('utf-8'))
+        puts( key + " : "+colored.blue(str(item['bounty'])) + " : " + item['task']
+             + " " + (donestring if item['done'] else ''))
+    else:
+        puts( colored.red('404: Nothing Found'))
+
+
+
 def get_todos():
     """
     fetches todos and show them.
     """
-    # TODO: Divide this function into two. Does two things.
-    todos = todobase.get('/todos', None)
-    for key in todos.keys():
-        todo = todos[key]
-        donestring = colored.green((u'\u2713').encode('utf-8'))
-        puts( key + " : "+colored.blue(str(todo['bounty'])) + " : " + todo['task']
-             + " " + (donestring if todo['done'] else ''))
+    todos = fetch_todos()
+    foreach(todos, print_todo_item)
+
 
 def get_todo(name):
     """
     fetches and displays a todo item.
     """
-    # TODO: Divide this into two. Reuse code.
-    todo = todobase.get('/todos', name)
-    if todo is not None:
-        puts ( colored.blue(str(todo['bounty'])) + " : " + todo['task'] )
-    else:
-        puts( colored.red('404: Nothing Found'))
+    todo = fetch_todos(name)
+    print_todo_item(todo, name)
 
 def add_todo(task, points=1):
     """
