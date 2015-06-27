@@ -14,6 +14,33 @@ todobase = firebase.FirebaseApplication('https://shining-heat-5315.firebaseio.co
 # TODO: Filtering Todos
 # TODO: Rewards and Stuff.
 # TODO: User Dashboard.
+
+def calculate_points(todos):
+    total_points = 0
+    earned_points = 0
+    items_done = 0
+    total_items = 0
+    for key in todos.keys():
+        todo = todos[key]
+        total_points += todo['bounty']
+        earned_points += todo['bounty'] if todo['done'] else 0
+        items_done += 1 if todo['done'] else 0
+        total_items +=1
+
+    return (total_points, earned_points, total_items, items_done)
+
+def show_profile():
+    """
+    prints out user Dashboard.
+    """
+    todos = todobase.get('/todos', None)
+    points, points_earned, num_of_items, done = calculate_points(todos)
+    puts ( 'Total Items: ' +  colored.blue(str(num_of_items)))
+    puts ( 'Total Done: ' +  colored.green(str(done)))
+    puts ( 'Total Points: ' +  colored.blue(str(points)))
+    puts ( 'Points Earned: ' +  colored.green(str(points_earned)))
+
+
 def get_unique_count():
     """
     Returns unique count for adding new todos.
@@ -69,11 +96,13 @@ def markdone(name):
 def main():
     parser = argparse.ArgumentParser(description='A Todo List Manager in your command line')
     # get argument
-    parser.add_argument('-g','--get', nargs='?', metavar="task")
+    parser.add_argument('-g','--get', nargs='?', metavar="task", action='append')
     # add todo argument
     parser.add_argument('-a', '--add', nargs=2, metavar=('task', 'bounty'))
     # done todo argument for marking something done
     parser.add_argument('-d', '--done', nargs='+', metavar='task')
+    # dashboard argument/ user profile.
+    parser.add_argument('-m', '--me', action='store_true')
 
     args = parser.parse_args()
     if args.add and len(args.add) == 2:
@@ -83,8 +112,11 @@ def main():
         add_todo(task, bounty)
 
     elif args.get is not None:
-        print "Case 3"
-        get_todo(args.get)
+        print "Case 2"
+        if args.get[0] is None:
+            get_todos()
+        else:
+            get_todo(args.get[0])
 
     elif args.done:
         print "Case 4"
@@ -94,9 +126,10 @@ def main():
             for task in args.done:
                 markdone(task)
 
-    elif args.get == None:
-        print "Case 2"
-        get_todos()
+    elif args.me:
+        print "Case 5"
+        show_profile()
+
 
 
 if __name__ == '__main__':
