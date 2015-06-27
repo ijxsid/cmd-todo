@@ -3,17 +3,16 @@ from firebase import firebase
 from clint.textui import puts, indent, colored
 import argparse
 import random
-
+import config
 import json
 
-todobase = firebase.FirebaseApplication('https://shining-heat-5315.firebaseio.com/', None)
+todobase = firebase.FirebaseApplication(config.FIREBASE_URL, None)
 
 # TODO: Better Way to Add todos.
 # TODO: Better Modelling for todos.
 # TODO: Better Way to Edit Todos.
 # TODO: Filtering Todos
 # TODO: Rewards and Stuff.
-# TODO: User Dashboard.
 
 def foreach(collection, callback):
     for key in collection.keys():
@@ -24,6 +23,9 @@ def fetch_todos(name=None):
     return todobase.get('/todos', name)
 
 def calculate_points(todos):
+    """
+    calculates points and other things for a user.
+    """
     total_points = 0
     earned_points = 0
     items_done = 0
@@ -62,6 +64,9 @@ def get_unique_count():
     return count
 
 def print_todo_item(item, key=None):
+    """
+    prints an todo item.
+    """
     if item is not None:
         donestring = colored.green((u'\u2713').encode('utf-8'))
         puts( key + " : "+colored.blue(str(item['bounty'])) + " : " + item['task']
