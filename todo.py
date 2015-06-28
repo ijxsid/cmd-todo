@@ -8,15 +8,15 @@ import json
 from lib.utils import Counter
 from lib.todocollection import TodoCollection
 from lib.userprofile import Profile
+from workers.todoeditor import TodoEditor
 
 todobase = firebase.FirebaseApplication(config.FIREBASE_URL, None)
+_version = config.APP_VERSION
 
-# TODO: Better Way to Add todos.
 # TODO: Better Modelling for todos.
-# TODO: Better Way to Edit Todos.
 # TODO: Filtering Todos.
 # TODO: Rewards and Stuff.
-# TODO: User profile and other stuff.
+# TODO: Due dates and timers.
 
 
 
@@ -25,23 +25,34 @@ def main():
     # get argument
     parser.add_argument('-g','--get', nargs='?', metavar="task", action='append')
     # add todo argument
-    parser.add_argument('-a', '--add', nargs=2, metavar=('task', 'bounty'))
+    parser.add_argument('-a', '--add', nargs='*')
     # done todo argument for marking something done
     parser.add_argument('-d', '--done', nargs='+', metavar='task')
     # removing a todo item
     parser.add_argument('-r', '--rm', nargs='+', metavar='task')
     # dashboard argument/ user profile.
     parser.add_argument('-m', '--me', action='store_true')
+    # dynamic argument
+    parser.add_argument('-e', '--edit', nargs=1, metavar=('task') )
+    # Version Info
+    parser.add_argument('-V', '--version', action='store_true')
 
     args = parser.parse_args()
     todos = TodoCollection(todobase, '/todos', 'todo')
+    editor = TodoEditor(todos)
     user = Profile(todos)
+    print args
 
-    if args.add and len(args.add) == 2:
-        print "Case 1"
-        task = str(args.add[0]) # task
-        bounty = int(args.add[1])
-        todos.add(task, bounty)
+    if isinstance(args.add, list):
+        if len(args.add) == 0:
+            editor.addflow()
+        elif len(args.add) == 2:
+            task = str(args.add[0]) # task
+            bounty = int(args.add[1])
+            todos.add(task, bounty)
+
+    elif args.edit:
+        editor.editflow(args.edit[0])
 
     elif args.get is not None:
         print "Case 2"
@@ -70,6 +81,12 @@ def main():
     elif args.me:
         print "Case 5"
         user.show_profile()
+
+    elif args.version:
+        puts( "Version: " + _version)
+        copyright = colored.green((u'\u00a9').encode('utf-8') + " 2015 Inderjit Sidhu & Airbase IO")
+        puts(copyright)
+
 
 
 

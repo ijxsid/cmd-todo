@@ -21,6 +21,9 @@ class TodoCollection(object):
         print_todo_item(self._todos[name], name)
 
     def add(self, task, bounty):
+        assert isinstance(task, str)
+        assert len(task) > 0, "Task Cannot be left empty."
+        assert isinstance(bounty, int)
         N = self._counter.get()
         name = 'todo' + str(N+1)
         todo = {'task': task, 'bounty': bounty, 'done': False}
@@ -29,13 +32,15 @@ class TodoCollection(object):
         self._update()
 
     def markdone(self, name):
-        # Need to find a better way to print responses.
+        self.edit(name, {'done': True})
+
+    def edit(self, name, newtodo):
+        # TODO: Need to find a better way to print responses.
         if name in self._todos.keys():
-            res = self._base.patch(self._url + "/" +  name , {'done': True})
+            res = self._base.patch(self._url + "/" +  name , newtodo)
             print res
         else:
             print "Not Found"
-
         self._update()
 
     def delete(self, name):

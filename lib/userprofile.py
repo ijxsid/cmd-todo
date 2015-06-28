@@ -36,4 +36,4 @@ class Profile(object):
         puts ( 'Total Done: ' +  colored.green(str(self._items_done)))
         puts ( 'Total Points: ' +  colored.blue(str(self._total_points)))
 
-        puts ( 'Points Earned: ' +  colored.green(str(self._items_done)))
+        puts ( 'Points Earned: ' +  colored.green(str(self._earned_points)))

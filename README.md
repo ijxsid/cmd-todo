@@ -1,5 +1,5 @@
-#Command line TODO List.
-[NEW] Gamified Todo lists. Plus Firebase Support for syncing.
+#Command line TODO-Lists.
+[NEW] Gamified Todo-lists. Plus Firebase Support for syncing.
 
 Manage your todos from command line.
 
