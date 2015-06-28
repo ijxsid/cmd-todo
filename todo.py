@@ -7,44 +7,16 @@ import config
 import json
 from lib.utils import Counter
 from lib.todocollection import TodoCollection
+from lib.userprofile import Profile
 
 todobase = firebase.FirebaseApplication(config.FIREBASE_URL, None)
 
 # TODO: Better Way to Add todos.
 # TODO: Better Modelling for todos.
 # TODO: Better Way to Edit Todos.
-# TODO: Filtering Todos
+# TODO: Filtering Todos.
 # TODO: Rewards and Stuff.
 # TODO: User profile and other stuff.
-
-
-def calculate_points(todos):
-    """
-    calculates points and other things for a user.
-    """
-    total_points = 0
-    earned_points = 0
-    items_done = 0
-    total_items = 0
-    for key in todos.keys():
-        todo = todos[key]
-        total_points += todo['bounty']
-        earned_points += todo['bounty'] if todo['done'] else 0
-        items_done += 1 if todo['done'] else 0
-        total_items +=1
-
-    return (total_points, earned_points, total_items, items_done)
-
-def show_profile():
-    """
-    prints out user Dashboard.
-    """
-    todos = todobase.get('/todos', None)
-    points, points_earned, num_of_items, done = calculate_points(todos)
-    puts ( 'Total Items: ' +  colored.blue(str(num_of_items)))
-    puts ( 'Total Done: ' +  colored.green(str(done)))
-    puts ( 'Total Points: ' +  colored.blue(str(points)))
-    puts ( 'Points Earned: ' +  colored.green(str(points_earned)))
 
 
 
@@ -63,6 +35,7 @@ def main():
 
     args = parser.parse_args()
     todos = TodoCollection(todobase, '/todos', 'todo')
+    user = Profile(todos)
 
     if args.add and len(args.add) == 2:
         print "Case 1"
@@ -96,7 +69,7 @@ def main():
 
     elif args.me:
         print "Case 5"
-        show_profile()
+        user.show_profile()
 
 
 

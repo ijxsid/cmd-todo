@@ -2,8 +2,6 @@ from utils import foreach, print_todo_item, Counter
 
 class TodoCollection(object):
 
-    #TODO: Add deleting a todo option.
-
     def __init__(self, base, url, countername='todo'):
         self._base = base
         self._url = url
@@ -12,6 +10,9 @@ class TodoCollection(object):
 
     def _update(self):
         self._todos = self._base.get(self._url, None)
+
+    def fetch_todos(self):
+        return self._todos
 
     def get_all(self):
         foreach(self._todos, print_todo_item)
