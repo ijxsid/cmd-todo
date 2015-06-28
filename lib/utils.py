@@ -31,3 +31,13 @@ def print_todo_item(item, key=None):
              + " " + (donestring if item['done'] else ''))
     else:
         puts( colored.red('404: Nothing Found'))
+
+def print_reward_item(item, key=None):
+    """
+    prints an Reward Item.
+    """
+    if item is not None:
+        puts ( str(key) + " : " + colored.green(str(item['bounty'])) + " : "  + item ['reward']
+              + " -> redeemed " + ( str(item['redeemed']) ) + " times." )
+    else:
+        puts( colored.red('404: Nothing Found'))

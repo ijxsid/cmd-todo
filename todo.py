@@ -9,6 +9,7 @@ from lib.utils import Counter
 from lib.todocollection import TodoCollection
 from lib.userprofile import Profile
 from workers.todoeditor import TodoEditor
+from lib.rewards import Rewards
 
 todobase = firebase.FirebaseApplication(config.FIREBASE_URL, None)
 _version = config.APP_VERSION
@@ -29,7 +30,7 @@ def main():
     # done todo argument for marking something done
     parser.add_argument('-d', '--done', nargs='+', metavar='task')
     # removing a todo item
-    parser.add_argument('-r', '--rm', nargs='+', metavar='task')
+    parser.add_argument('--delete', nargs='+', metavar='task')
     # dashboard argument/ user profile.
     parser.add_argument('-m', '--me', action='store_true')
     # dynamic argument
@@ -37,49 +38,82 @@ def main():
     # Version Info
     parser.add_argument('-V', '--version', action='store_true')
 
+    # Add an optional rewards optional
+    parser.add_argument('-r','--reward', action='store_true')
+    # Add Redeem optional argument
+    parser.add_argument('-t', '--redeem', nargs='+', metavar=('reward', 'times'))
+
     args = parser.parse_args()
     todos = TodoCollection(todobase, '/todos', 'todo')
+    rewards = Rewards(todobase, '/rewards', 'reward')
     editor = TodoEditor(todos)
     user = Profile(todos)
     print args
 
     if isinstance(args.add, list):
-        if len(args.add) == 0:
-            editor.addflow()
-        elif len(args.add) == 2:
-            task = str(args.add[0]) # task
-            bounty = int(args.add[1])
-            todos.add(task, bounty)
+        if args.reward:
+            # Add an reward
+            if len(args.add) == 2:
+                reward = str(args.add[0])
+                bounty = int(args.add[1])
+                rewards.add(reward, bounty)
+
+        else:
+            if len(args.add) == 0:
+                editor.addflow()
+            elif len(args.add) == 2:
+                task = str(args.add[0]) # task
+                bounty = int(args.add[1])
+                todos.add(task, bounty)
 
     elif args.edit:
         editor.editflow(args.edit[0])
 
     elif args.get is not None:
-        print "Case 2"
-        if args.get[0] is None:
-            todos.get_all()
+        if args.reward:
+            if args.get[0] is None:
+                rewards.get_all()
+            else:
+                rewards.get(args.get[0])
         else:
-            todos.get(args.get[0])
+            if args.get[0] is None:
+                todos.get_all()
+            else:
+                todos.get(args.get[0])
+
 
     elif args.done:
-        print "Case 4"
         if isinstance(args.done, str):
             todos.markdone(args.done)
         elif isinstance(args.done, list):
             for task in args.done:
                 todos.markdone(task)
 
-    elif args.rm:
-        print "Case 6"
-        if isinstance(args.rm, str):
-            todos.delete(args.rm)
-        elif isinstance(args.rm, list):
-            for task in args.rm:
-                todos.delete(task)
+    elif args.delete:
+        if args.reward:
+            if isinstance(args.delete, str):
+                rewards.delete(args.delete)
+            elif isinstance(args.delete, list):
+                for task in args.delete:
+                    rewards.delete(task)
+        else:
+            if isinstance(args.delete, str):
+                todos.delete(args.delete)
+            elif isinstance(args.delete, list):
+                for task in args.delete:
+                    todos.delete(task)
 
+
+    elif args.redeem:
+        if args.reward:
+            name = args.redeem[0]
+            if len(args.redeem) == 2:
+                times = int(args.redeem[1])
+            else:
+                times = 1
+            rewards.redeem(name, times)
 
     elif args.me:
-        print "Case 5"
         user.show_profile()
 
     elif args.version:
