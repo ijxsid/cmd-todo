@@ -8,6 +8,8 @@ class TodoCollection(object):
         self._todos = self._base.get(url, None)
         self._counter = Counter(countername, self._base)
 
+    def _update(self):
+        self._todos = self._base.get(url, None)
 
     def fetch_todos(self):
         return self._todos
@@ -27,6 +29,7 @@ class TodoCollection(object):
         todo = {'task': task, 'bounty': bounty, 'done': False}
         res = self._base.put(self._url, name, todo)
         print res
+        self._update()
 
     def markdone(self, name):
         self.edit(name, {'done': True})
@@ -38,6 +41,7 @@ class TodoCollection(object):
             print res
         else:
             print "Not Found"
+        self._update()
 
     def delete(self, name):
         if name in self._todos.keys():
@@ -45,3 +49,4 @@ class TodoCollection(object):
             print res
         else:
             print "Not Found. Can't Delete"
+        self._update()

@@ -16,8 +16,8 @@ _version = config.APP_VERSION
 
 # TODO: Better Modelling for todos.
 # TODO: Filtering Todos.
-# TODO: Rewards and Stuff.
 # TODO: Due dates and timers.
+# TODO: User profiles on firebase.
 
 
 

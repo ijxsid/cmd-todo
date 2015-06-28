@@ -10,6 +10,12 @@ class Rewards(object):
         self._counter = Counter(countername, self._base)
 
 
+    def _update(self):
+        self._rewards = self._base.get(url, None)
+
+    def fetch_rewards():
+        return self._rewards
+
     def get_all(self):
         foreach(self._rewards, print_reward_item)
 
@@ -22,6 +28,7 @@ class Rewards(object):
         todo = {'reward': reward, 'bounty': bounty, 'redeemed':0}
         res = self._base.put(self._url, name, todo)
         print res
+        self._update()
 
     def redeem(self, name, times=1):
         reward = self._rewards[name]
@@ -36,6 +43,7 @@ class Rewards(object):
             print res
         else:
             print "Not Found"
+        self._update()
 
     def delete(self, name):
         if name in self._rewards.keys():
@@ -43,3 +51,4 @@ class Rewards(object):
             print res
         else:
             print "Not Found. Can't Delete"
+        self._update()
