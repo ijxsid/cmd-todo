@@ -47,7 +47,7 @@ def main():
     todos = TodoCollection(todobase, '/todos', 'todo')
     rewards = Rewards(todobase, '/rewards', 'reward')
     editor = TodoEditor(todos)
-    user = Profile(todos)
+    user = Profile(todobase, '/profile', todos, rewards)
     print args
 
     if isinstance(args.add, list):
@@ -114,6 +114,7 @@ def main():
             rewards.redeem(name, times)
 
     elif args.me:
+        user.update()
         user.show_profile()
 
     elif args.version:
