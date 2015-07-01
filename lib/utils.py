@@ -1,6 +1,14 @@
 import random
 from clint.textui import puts, indent, colored
 
+# Some Cursor UTILS
+"""
+for more cursor magic things, see http://www.termsys.demon.co.uk/vtansi.htm#cursor
+"""
+MOVE_CURSOR_UP = '\x1b[1A'
+ERASE_LINE = '\x1b[2K'
+
+
 class Counter(object):
     def __init__(self, name, base):
         self._todobase = base
