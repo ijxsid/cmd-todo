@@ -1,5 +1,6 @@
 from clint.textui import puts, colored, indent
-
+from datetime import datetime, timedelta
+import re
 class TodoEditor(object):
     def __init__(self, todos):
         self._todos = todos  #object not data
@@ -12,7 +13,12 @@ class TodoEditor(object):
 
         task = raw_input("Whats the thing! (req): ").strip()
         bounty = int(raw_input("How much is the reward (integer):(" + str(1) + ") ") or 1)
-        self._todos.add(task, bounty)
+        due = raw_input("When its' due? (YYYY-MM-DD HH:mm)/ +(due_rules): ")
+        due_datetime = None
+        if (due):
+            due_datetime = self._parse_due(due)
+
+        self._todos.add(task, bounty, due_datetime)
 
     def editflow(self, name):
         print ("\tThis is Dynamic EditFlow, so to avoid writing long lines in the \n"
@@ -36,3 +42,43 @@ class TodoEditor(object):
             newtodo['done'] = done
 
         self._todos.edit(name, newtodo)
+
+    def _parse_due(self, duestring):
+        if duestring[0] in ['+', '-']:
+            """
+            That means the duestring is of the format [+,-][0-9][hdwmy]
+
+            """
+            pattern = re.compile('(\+|\-)([0-9]+)([Mhdwmy])')
+            matches = pattern.findall(duestring)
+            time_now = datetime.now()
+            due_datetime = time_now
+            for match in matches:
+                sign = match[0]
+                n = int(match[1])
+                unit = match[2]
+                if unit == 'h':
+                    delta = timedelta(hours=n)
+                elif unit == 'M':
+                    delta = timedelta(minutes=n)
+                elif unit == 'd':
+                    delta = timedelta(days=n)
+                elif unit == 'w':
+                    delta = timedelta(weeks=n)
+                elif unit == 'm':
+                    delta = timedelta(days=n*30)
+                elif unit == 'y':
+                    delta = timedelta(days=n*365)
+                else:
+                    delta = timedelta(days=0)
+
+                if sign == '+':
+                    due_datetime += delta
+                else:
+                    due_datetime -= delta
+            return due_datetime
+
+        else:
+            date_format = '%Y-%m-%d'
+            due_datetime = datetime.strptime(duestring, date_format)
+            return due_datetime
