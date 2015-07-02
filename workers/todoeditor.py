@@ -19,10 +19,8 @@ class TodoEditor(object):
             due_datetime = self._parse_due(due)
         tags = raw_input("Tags (comma seprated): ").strip().split(',')
         tags = self._clean_tags(tags)
-        foldername = raw_input("Folder/Project :" ).strip()
-        foldername = self._clean_foldername(foldername)
 
-        self._todos.add(task, bounty, due_datetime, tags, foldername)
+        self._todos.add(task, bounty, due_datetime, tags)
 
     def editflow(self, name):
         print ("\tThis is Dynamic EditFlow, so to avoid writing long lines in the \n"
@@ -92,11 +90,5 @@ class TodoEditor(object):
         res = []
         for tag in tags:
             match = pattern.match(tag)
-            res.append(match.group(1).lower())
+            res.append(match.group(1))
         return res
-
-    def _clean_foldername(self, foldername):
-        pattern = re.compile('\s*(\w*)')
-        match = pattern.match(foldername)
-        res = match.group(1)
-        return res.lower()

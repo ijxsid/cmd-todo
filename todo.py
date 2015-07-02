@@ -2,7 +2,10 @@
 from firebase import firebase
 from clint.textui import puts, indent, colored
 import argparse
+import random
 import config
+import json
+from lib.utils import Counter
 from lib.todocollection import TodoCollection
 from lib.userprofile import Profile
 from workers.todoeditor import TodoEditor
@@ -115,8 +118,8 @@ def main():
 
     elif args.version:
         puts( "Version: " + _version)
-        APP_COPYRIGHT = colored.green((u'\u00a9').encode('utf-8') + " 2015 Inderjit Sidhu & Airbase IO")
-        puts(APP_COPYRIGHT)
+        copyright = colored.green((u'\u00a9').encode('utf-8') + " 2015 Inderjit Sidhu & Airbase IO")
+        puts(copyright)
 
 
 if __name__ == '__main__':
