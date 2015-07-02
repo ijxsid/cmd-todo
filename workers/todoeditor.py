@@ -5,6 +5,7 @@ class TodoEditor(object):
     def __init__(self, todos):
         self._todos = todos  #object not data
         self._todosdata = self._todos.fetch_todos()
+        self._todostructure = self._todos.fetch_structure()
 
     def addflow(self):
         print ("\tThis is Dynamic Addflow, so to avoid write long lines in the \n"
@@ -13,7 +14,7 @@ class TodoEditor(object):
 
         task = raw_input("Whats the thing! (req): ").strip()
         bounty = int(raw_input("How much is the reward (integer):(" + str(1) + ") ") or 1)
-        due = raw_input("When its' due? (YYYY-MM-DD HH:mm)/ +(due_rules): ")
+        due = raw_input("When its' due? (YYYY-MM-DD HH:mm)/ +(due_rules): ").strip()
         due_datetime = None
         if (due):
             due_datetime = self._parse_due(due)
@@ -25,7 +26,6 @@ class TodoEditor(object):
         self._todos.add(task, bounty, due_datetime, tags, foldername)
 
     def editflow(self, name):
-        # TODO: Improve EditFlow for new features in our app 
         print ("\tThis is Dynamic EditFlow, so to avoid writing long lines in the \n"
                + "\tcommand line. Editing (" + name + "): \n\n" )
 
@@ -37,6 +37,25 @@ class TodoEditor(object):
 
         done = int(raw_input("1 if done, 0 if not done yet: ") or 0)
         done = bool(done)
+        # due_datetime handling
+        duestring = 'None'
+        if 'due' in todo.keys():
+            duestring = todo['due']
+        due = raw_input("When its' due? (Prev: "+ duestring +" ): ").strip()
+        due_datetime = None
+        if (due):
+            due_datetime = self._parse_due(due)
+        # tags_handling
+        tag_string = 'None'
+        if 'tags' in todo.keys():
+            tag_string = ", ".join(todo['tags'])
+        tags = raw_input("Tags (Prev: "+tag_string+" )\n New: ").strip().split(',')
+        tags = self._clean_tags(tags)
+        # folder_handling
+        folder = self._todostructure[name]
+        newfolder = raw_input("Folder (Prev: "+ folder +" ): ").strip()
+        newfolder = self._clean_foldername(newfolder)
+
         newtodo = {}
 
         if (task != '' or task != todo['task']):
@@ -45,8 +64,14 @@ class TodoEditor(object):
             newtodo['bounty'] = bounty
         if (done != todo['done']):
             newtodo['done'] = done
+        if (tags != []):
+            newtodo['tags'] = tags
+        if (due_datetime is not None):
+            newtodo['due'] = str(due_datetime)
 
         self._todos.edit(name, newtodo)
+        if (newfolder != ''):
+            self._todos.move_to_folder(newfolder, name)
 
     def _parse_due(self, duestring):
         if duestring[0] in ['+', '-']:

@@ -1,7 +1,6 @@
 from utils import foreach, print_todo_item, Counter
 from datetime import datetime
 
-#TODO: Delete Folder to be implemented.
 class TodoCollection(object):
 
     def __init__(self, base, url, countername='todo'):
