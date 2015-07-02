@@ -24,7 +24,7 @@ class TodoCollection(object):
     def get(self, name):
         print_todo_item(self._todos[name], name)
 
-    def add(self, task, bounty, duetime=None, tags=[]):
+    def add(self, task, bounty, duetime=None, tags=[], folder=None):
         assert isinstance(task, str)
         assert len(task) > 0, "Task Cannot be left empty."
         assert isinstance(bounty, int)
@@ -36,7 +36,10 @@ class TodoCollection(object):
             todo['due'] = str(duetime)
         if tags != []:
             todo['tags'] = tags
-        res = self._base.put(self._url, name, todo)
+        if folder:
+            res = self._base.put(self._url + "/" + folder, name, todo)
+        else:
+            res = self._base.put(self._url, name, todo)
         print res
         self._update()
 
@@ -65,5 +68,4 @@ class TodoCollection(object):
             item_tags = self._todos[key]['tags']
         except KeyError:
             item_tags = []
-            pass
         return any(tag in item_tags for tag in tags)
