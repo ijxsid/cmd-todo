@@ -1,7 +1,6 @@
 from utils import foreach, print_todo_item, Counter
 from datetime import datetime
 
-#TODO: move_to_folder to be implemented.
 #TODO: Delete Folder to be implemented.
 class TodoCollection(object):
 
@@ -91,6 +90,22 @@ class TodoCollection(object):
             res = self._base.put(self._url + "/" + foldername, key, todo)
             print res
             self._structure[key] = foldername
+
+
+    def delete_folder(self, foldername):
+        if foldername == 'MAIN':
+            print "Cannot delete default folder."
+        elif foldername in self._todos.keys():
+            keys_to_delete = []
+            for key, value in self._structure.iteritems():
+                if value == foldername:
+                    keys_to_delete.append(key)
+            for key in keys_to_delete:
+                del self._structure[key]
+            res = self._base.delete(self._url, foldername)
+            print res
+        else:
+            print "Folder not found"
 
 
     def _is_tagged(self, key, tags):

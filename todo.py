@@ -108,6 +108,12 @@ def main():
             elif isinstance(args.delete, list):
                 for task in args.delete:
                     rewards.delete(task)
+        elif args.folder:
+            if len(args.delete) == 1:
+                todos.delete_folder(args.delete[0])
+            else:
+                print "Cannot delete multiple Folders at once.\
+                       \nDelete one by one."
         else:
             if isinstance(args.delete, str):
                 todos.delete(args.delete)
