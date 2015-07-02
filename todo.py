@@ -21,7 +21,9 @@ def main():
     # get argument
     parser.add_argument('-g','--get', nargs='?', metavar="task", action='append')
     # filter by tag argument
-    parser.add_argument('-t', '--tag', nargs="+", metavar='task')
+    parser.add_argument('-t', '--tag', nargs="+", metavar='tag')
+    # filter by folder argument
+    parser.add_argument('-f', '--folder', nargs='?', metavar='folder', action='append')
     # add todo argument
     parser.add_argument('-a', '--add', nargs='*')
     # done todo argument for marking something done
@@ -39,13 +41,18 @@ def main():
     parser.add_argument('-r','--reward', action='store_true')
     # Add Redeem optional argument
     parser.add_argument('-x','--redeem', nargs='+', metavar=('reward', 'times'))
+    parser.add_argument('--structure', action='store_true')
 
     args = parser.parse_args()
     todos = TodoCollection(todobase, '/todos', 'todo')
     rewards = Rewards(todobase, '/rewards', 'reward')
     editor = TodoEditor(todos)
     user = Profile(todobase, '/profile', todos, rewards)
+
     print args
+
+    if args.folder and args.folder[0] is None:
+        args.folder = ['MAIN']
 
     if isinstance(args.add, list):
         if args.reward:
@@ -64,7 +71,11 @@ def main():
                 todos.add(task, bounty)
 
     elif args.edit:
-        editor.editflow(args.edit[0])
+        if args.folder:
+            # Editing Folder is equivalent to moving between folders.
+            todos.move_to_folder(args.folder[0], args.edit[0])
+        else:
+            editor.editflow(args.edit[0])
 
     elif args.get is not None:
         if args.reward:
@@ -73,8 +84,13 @@ def main():
             else:
                 rewards.get(args.get[0])
         else:
-            if args.tag:
-                todos.get_all(tags=args.tag)
+            if args.folder:
+                todos.get_by_folder(args.folder[0])
+            elif args.tag:
+                if args.folder:
+                    todos.get_by_folder(args.folder[0], args.tag)
+                else:
+                    todos.get_all(tags=args.tag)
             elif args.get[0] is None:
                 todos.get_all()
             else:
@@ -95,6 +111,12 @@ def main():
             elif isinstance(args.delete, list):
                 for task in args.delete:
                     rewards.delete(task)
+        elif args.folder:
+            if len(args.delete) == 1:
+                todos.delete_folder(args.delete[0])
+            else:
+                print "Cannot delete multiple Folders at once.\
+                       \nDelete one by one."
         else:
             if isinstance(args.delete, str):
                 todos.delete(args.delete)
@@ -118,8 +140,11 @@ def main():
 
     elif args.version:
         puts( "Version: " + _version)
-        copyright = colored.green((u'\u00a9').encode('utf-8') + " 2015 Inderjit Sidhu & Airbase IO")
-        puts(copyright)
+        APP_COPYRIGHT = colored.green((u'\u00a9').encode('utf-8') + " 2015 Inderjit Sidhu & Airbase IO")
+        puts(APP_COPYRIGHT)
+    elif args.structure:
+        structure = todos.fetch_structure()
+        print structure
 
 
 if __name__ == '__main__':
