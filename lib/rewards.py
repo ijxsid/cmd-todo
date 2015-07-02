@@ -11,7 +11,7 @@ class Rewards(object):
 
 
     def _update(self):
-        self._rewards = self._base.get(url, None)
+        self._rewards = self._base.get(self._url, None)
 
     def fetch_rewards(self):
         return self._rewards

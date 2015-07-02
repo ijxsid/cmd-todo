@@ -28,7 +28,9 @@ class Profile(object):
         items_done = 0
         total_items = 0
         rewards_redeemed = 0
-        for key in self._todos.keys():
+        for folder in self._todos.keys()
+
+            for key in folder.keys():
             todo = self._todos[key]
             total_points += todo['bounty']
             earned_points += todo['bounty'] if todo['done'] else 0
@@ -54,4 +56,4 @@ class Profile(object):
         puts ( 'Total Points: ' +  colored.blue(str(self._profile['available'])))
 
         puts ( 'Points Earned: ' +  colored.green(str(self._profile['points'])))
-        puts ( 'Points Earned: ' +  colored.green(str(self._profile['rewards_redeemed'])))
+        puts ( 'Rewards Redeemed: ' +  colored.green(str(self._profile['rewards_redeemed'])))
