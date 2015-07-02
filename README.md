@@ -3,6 +3,7 @@
 
 Manage your todos from command line.
 
+Current Version is 0.5alpha2 called "Warbler".
 
 ### Features (DONE)
 - Add Todos + bounty
@@ -14,12 +15,12 @@ Manage your todos from command line.
 - Filters
 - Rewards.
 - Due Dates/ times.
-
+- Folders/Project Categorization.
+- Snooze by Edit.
 
 
 ### Features (TODO)
 - User Dashboard in command line.
-- Workspaces.
 - Snoozes.
 - Assigning to the other people.
 - timers.
