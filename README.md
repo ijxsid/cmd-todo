@@ -24,6 +24,9 @@ Current Version is 0.5alpha2 called "Warbler".
 - Snoozes.
 - Assigning to the other people.
 - timers.
+- time-logging.
+- dynamic folders.
+
 
 
 Many of the cool stuff coming soon. (Airbase.IO)
