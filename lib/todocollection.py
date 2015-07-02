@@ -83,6 +83,16 @@ class TodoCollection(object):
             print "Not Found. Can't Delete"
         self._update()
 
+    def move_to_folder(self, foldername, key):
+        src_foldername = self._structure[key]
+        if src_foldername != foldername:
+            todo = self._todos[src_foldername][key]
+            self.delete(key)
+            res = self._base.put(self._url + "/" + foldername, key, todo)
+            print res
+            self._structure[key] = foldername
+
+
     def _is_tagged(self, key, tags):
         try:
             foldername = self._structure[key]

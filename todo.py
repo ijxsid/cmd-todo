@@ -48,7 +48,7 @@ def main():
 
     print args
 
-    if args.folder[0] is None:
+    if args.folder and args.folder[0] is None:
         args.folder = ['MAIN']
 
     if isinstance(args.add, list):
@@ -68,7 +68,11 @@ def main():
                 todos.add(task, bounty)
 
     elif args.edit:
-        editor.editflow(args.edit[0])
+        if args.folder:
+            # Editing Folder is equivalent to moving between folders.
+            todos.move_to_folder(args.folder[0], args.edit[0])
+        else:
+            editor.editflow(args.edit[0])
 
     elif args.get is not None:
         if args.reward:
