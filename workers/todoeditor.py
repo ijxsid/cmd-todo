@@ -25,6 +25,7 @@ class TodoEditor(object):
         self._todos.add(task, bounty, due_datetime, tags, foldername)
 
     def editflow(self, name):
+        # TODO: Improve EditFlow for new features in our app 
         print ("\tThis is Dynamic EditFlow, so to avoid writing long lines in the \n"
                + "\tcommand line. Editing (" + name + "): \n\n" )
 

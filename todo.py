@@ -18,7 +18,9 @@ def main():
     # get argument
     parser.add_argument('-g','--get', nargs='?', metavar="task", action='append')
     # filter by tag argument
-    parser.add_argument('-t', '--tag', nargs="+", metavar='task')
+    parser.add_argument('-t', '--tag', nargs="+", metavar='tag')
+    # filter by folder argument
+    parser.add_argument('-f', '--folder', nargs='?', metavar='folder', action='append')
     # add todo argument
     parser.add_argument('-a', '--add', nargs='*')
     # done todo argument for marking something done
@@ -43,7 +45,11 @@ def main():
     rewards = Rewards(todobase, '/rewards', 'reward')
     editor = TodoEditor(todos)
     user = Profile(todobase, '/profile', todos, rewards)
+
     print args
+
+    if args.folder[0] is None:
+        args.folder = ['MAIN']
 
     if isinstance(args.add, list):
         if args.reward:
@@ -71,8 +77,13 @@ def main():
             else:
                 rewards.get(args.get[0])
         else:
-            if args.tag:
-                todos.get_all(tags=args.tag)
+            if args.folder:
+                todos.get_by_folder(args.folder[0])
+            elif args.tag:
+                if args.folder:
+                    todos.get_by_folder(args.folder[0], args.tag)
+                else:
+                    todos.get_all(tags=args.tag)
             elif args.get[0] is None:
                 todos.get_all()
             else:

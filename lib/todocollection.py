@@ -1,6 +1,8 @@
 from utils import foreach, print_todo_item, Counter
 from datetime import datetime
 
+#TODO: move_to_folder to be implemented.
+#TODO: Delete Folder to be implemented.
 class TodoCollection(object):
 
     def __init__(self, base, url, countername='todo'):
@@ -33,6 +35,13 @@ class TodoCollection(object):
         """
         foldername = self._structure[name]
         print_todo_item(self._todos[foldername][name], name)
+
+    def get_by_folder(self, foldername, tags=None):
+        todos = self._todos[foldername]
+
+        if tags:
+            todos = {key: todos[key] for key in todos.keys() if self._is_tagged(key, tags)}
+        foreach(todos, print_todo_item)
 
     def add(self, task, bounty, duetime=None, tags=[], folder=None):
         assert isinstance(task, str)
