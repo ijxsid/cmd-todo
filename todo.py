@@ -36,6 +36,7 @@ def main():
     parser.add_argument('-r','--reward', action='store_true')
     # Add Redeem optional argument
     parser.add_argument('-x','--redeem', nargs='+', metavar=('reward', 'times'))
+    parser.add_argument('--structure', action='store_true')
 
     args = parser.parse_args()
     todos = TodoCollection(todobase, '/todos', 'todo')
@@ -117,6 +118,9 @@ def main():
         puts( "Version: " + _version)
         APP_COPYRIGHT = colored.green((u'\u00a9').encode('utf-8') + " 2015 Inderjit Sidhu & Airbase IO")
         puts(APP_COPYRIGHT)
+    elif args.structure:
+        structure = todos.fetch_structure()
+        print structure
 
 
 if __name__ == '__main__':
