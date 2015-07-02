@@ -11,22 +11,20 @@ class TodoCollection(object):
         self._structure = self._make_folder_structure(self._todos)
 
     def _update(self):
-        # TODO: unimplemented for folders
         self._todos = self._base.get(self._url, None)
 
     def fetch_structure(self):
         return self._structure
 
     def fetch_todos(self):
-        # TODO: unimplemented for folders
-        return self._todos
+        return {key: self._todos[foldername][key] for key, foldername in self._structure.iteritems()}
 
     def get_all(self, tags=None):
-        # TODO: unimplemented for folders
-        res_todos = self._todos
+        todos = {key: self._todos[foldername][key] for key, foldername in self._structure.iteritems()}
+
         if tags:
-            res_todos = {key: self._todos[key]  for key in self._todos.keys() if self._is_tagged(key, tags)}
-        foreach(res_todos, print_todo_item)
+            todos = {key: todos[key] for key in todos.keys() if self._is_tagged(key, tags)}
+        foreach(todos, print_todo_item)
 
     def get(self, name):
         """
@@ -55,32 +53,31 @@ class TodoCollection(object):
         self._update()
 
     def markdone(self, name):
-        # TODO: unimplemented for folders
         self.edit(name, {'done': True})
 
     def edit(self, name, newtodo):
-        # TODO: unimplemented for folders
         # TODO: Need to find a better way to print responses.
-        if name in self._todos.keys():
-            res = self._base.patch(self._url + "/" +  name , newtodo)
+        if name in self._structure.keys():
+            foldername = self._structure[name]
+            res = self._base.patch(self._url + "/" + foldername + "/" + name , newtodo)
             print res
         else:
             print "Not Found"
         self._update()
 
     def delete(self, name):
-        # TODO: unimplemented for folders
-        if name in self._todos.keys():
-            res = self._base.delete(self._url, name)
+        if name in self._structure.keys():
+            foldername = self._structure[name]
+            res = self._base.delete(self._url + '/' + foldername, name)
             print res
         else:
             print "Not Found. Can't Delete"
         self._update()
 
     def _is_tagged(self, key, tags):
-        # TODO: unimplemented for folders
         try:
-            item_tags = self._todos[key]['tags']
+            foldername = self._structure[key]
+            item_tags = self._todos[foldername][key]['tags']
         except KeyError:
             item_tags = []
         return any(tag in item_tags for tag in tags)
