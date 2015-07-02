@@ -15,8 +15,11 @@ class TodoCollection(object):
     def fetch_todos(self):
         return self._todos
 
-    def get_all(self):
-        foreach(self._todos, print_todo_item)
+    def get_all(self, tags=None):
+        res_todos = self._todos
+        if tags:
+            res_todos = {key: self._todos[key]  for key in self._todos.keys() if self._is_tagged(key, tags)}
+        foreach(res_todos, print_todo_item)
 
     def get(self, name):
         print_todo_item(self._todos[name], name)
@@ -56,3 +59,11 @@ class TodoCollection(object):
         else:
             print "Not Found. Can't Delete"
         self._update()
+
+    def _is_tagged(self, key, tags):
+        try:
+            item_tags = self._todos[key]['tags']
+        except KeyError:
+            item_tags = []
+            pass
+        return any(tag in item_tags for tag in tags)

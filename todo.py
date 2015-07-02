@@ -10,21 +10,18 @@ from lib.todocollection import TodoCollection
 from lib.userprofile import Profile
 from workers.todoeditor import TodoEditor
 from lib.rewards import Rewards
+import info
 
 todobase = firebase.FirebaseApplication(config.FIREBASE_URL, None)
-_version = config.APP_VERSION
-
-# TODO: Better Modelling for todos.
-# TODO: Filtering Todos.
-# TODO: Due dates and timers.
-# TODO: User profiles on firebase.
-
+_version = info.VERSION
 
 
 def main():
     parser = argparse.ArgumentParser(description='A Todo List Manager in your command line')
     # get argument
     parser.add_argument('-g','--get', nargs='?', metavar="task", action='append')
+    # filter by tag argument
+    parser.add_argument('-t', '--tag', nargs="+", metavar='task')
     # add todo argument
     parser.add_argument('-a', '--add', nargs='*')
     # done todo argument for marking something done
@@ -41,7 +38,7 @@ def main():
     # Add an optional rewards optional
     parser.add_argument('-r','--reward', action='store_true')
     # Add Redeem optional argument
-    parser.add_argument('-t', '--redeem', nargs='+', metavar=('reward', 'times'))
+    parser.add_argument('-x','--redeem', nargs='+', metavar=('reward', 'times'))
 
     args = parser.parse_args()
     todos = TodoCollection(todobase, '/todos', 'todo')
@@ -76,7 +73,9 @@ def main():
             else:
                 rewards.get(args.get[0])
         else:
-            if args.get[0] is None:
+            if args.tag:
+                todos.get_all(tags=args.tag)
+            elif args.get[0] is None:
                 todos.get_all()
             else:
                 todos.get(args.get[0])
@@ -121,8 +120,6 @@ def main():
         puts( "Version: " + _version)
         copyright = colored.green((u'\u00a9').encode('utf-8') + " 2015 Inderjit Sidhu & Airbase IO")
         puts(copyright)
-
-
 
 
 if __name__ == '__main__':

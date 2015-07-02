@@ -10,17 +10,17 @@ Manage your todos from command line.
 - Get Todos by name
 - Mark the todos done.
 - Command line coloring.
+- Tags
+- Filters
+- Rewards.
+- Due Dates/ times.
+
 
 
 ### Features (TODO)
 - User Dashboard in command line.
-- Tagging todos
-- Tags
-- Filters
 - Workspaces.
 - Snoozes.
-- Due Dates/ times.
-- Rewards.
 - Assigning to the other people.
 - timers.
 
