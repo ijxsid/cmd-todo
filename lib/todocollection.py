@@ -21,16 +21,18 @@ class TodoCollection(object):
     def get(self, name):
         print_todo_item(self._todos[name], name)
 
-    def add(self, task, bounty, duetime=None):
+    def add(self, task, bounty, duetime=None, tags=[]):
         assert isinstance(task, str)
         assert len(task) > 0, "Task Cannot be left empty."
         assert isinstance(bounty, int)
-
+        assert isinstance(tags, list)
         N = self._counter.get()
         name = 'todo' + str(N+1)
         todo = {'task': task, 'bounty': bounty, 'done': False}
         if duetime is not None:
             todo['due'] = str(duetime)
+        if tags != []:
+            todo['tags'] = tags
         res = self._base.put(self._url, name, todo)
         print res
         self._update()

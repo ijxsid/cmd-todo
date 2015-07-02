@@ -17,8 +17,10 @@ class TodoEditor(object):
         due_datetime = None
         if (due):
             due_datetime = self._parse_due(due)
+        tags = raw_input("Tags (comma seprated): ").strip().split(',')
+        tags = self._clean_tags(tags)
 
-        self._todos.add(task, bounty, due_datetime)
+        self._todos.add(task, bounty, due_datetime, tags)
 
     def editflow(self, name):
         print ("\tThis is Dynamic EditFlow, so to avoid writing long lines in the \n"
@@ -82,3 +84,11 @@ class TodoEditor(object):
             date_format = '%Y-%m-%d'
             due_datetime = datetime.strptime(duestring, date_format)
             return due_datetime
+
+    def _clean_tags(self, tags):
+        pattern = re.compile('\s*(\w+)')
+        res = []
+        for tag in tags:
+            match = pattern.match(tag)
+            res.append(match.group(1))
+        return res
