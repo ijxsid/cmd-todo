@@ -186,7 +186,7 @@ class TodoCollection(object):
 
         dynamic_folders = {'future': [], 'later_this_year': [],
                            'later_this_month': [], 'this_week': [],
-                           'next_week': [], 'today': [],
+                           'next_week': [], 'today': [], 'past_due': [],
                            'tommorrow': [], 'UPDATED': None}
         todos = self.fetch_todos()
         for key in todos.keys():
@@ -194,6 +194,7 @@ class TodoCollection(object):
             if 'due' in todo:
 
                 duetime = datetime.strptime(todo['due'], DATE_FORMAT)
+
                 if today.day == duetime.day and today.month == duetime.month and today.year == duetime.year:
                     dynamic_folders['today'].append(todo)
                     continue
@@ -203,10 +204,9 @@ class TodoCollection(object):
                 if duetime > tmrw_start and duetime <= tmrw_end:
                     dynamic_folders['tommorrow'].append(todo)
                     continue
-
                 delta_end_of_week = timedelta(hours = ((7 - today.weekday())*24))
                 end_of_week = today + delta_end_of_week
-                if duetime <=  end_of_week:
+                if duetime > tmrw_end and duetime <=  end_of_week:
                     dynamic_folders['this_week'].append(todo)
                     continue
 
@@ -216,13 +216,17 @@ class TodoCollection(object):
                     dynamic_folders['next_week'].append(todo)
                     continue
 
+                if today > duetime:
+                    dynamic_folders['past_due'].append(todo)
+                    continue
+
                 if today.year == duetime.year and today.month == duetime.month:
                     dynamic_folders['later_this_month'].append(todo)
                     continue
+
                 if today.year == duetime.year:
                     dynamic_folders['later_this_year'].append(todo)
                     continue
-
                 if today.year < duetime.year:
                     dynamic_folders['future'].append(todo)
                     continue
