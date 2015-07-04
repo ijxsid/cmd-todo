@@ -1,5 +1,5 @@
-from utils import foreach, print_todo_item, Counter, parse_duestring
-from datetime import datetime
+from utils import foreach, print_todo_item, Counter, parse_duestring, DATE_FORMAT
+from datetime import datetime, timedelta
 from timeit import Timer
 from clint.textui import colored
 
@@ -11,9 +11,13 @@ class TodoCollection(object):
         self._todos = self._base.get(url, None)
         self._counter = Counter(countername, self._base)
         self._structure = self._make_folder_structure(self._todos)
+        self._schedule = self._create_dynamic_folder_structure()
 
     def _update(self):
         self._todos = self._base.get(self._url, None)
+
+    def fetch_schedule(self):
+        return self._schedule
 
     def fetch_structure(self):
         return self._structure
@@ -52,7 +56,7 @@ class TodoCollection(object):
         name = 'todo' + str(N+1)
         todo = {'task': task, 'bounty': bounty, 'done': False}
         if duetime is not None:
-            todo['due'] = duetime.strftime('%Y-%m-%d %H:%M:%S.%f')
+            todo['due'] = duetime.strftime(DATE_FORMAT)
         if tags != []:
             todo['tags'] = tags
         if not folder or folder ==' ':
@@ -162,8 +166,50 @@ class TodoCollection(object):
                 else:
                     snooze = parse_duestring(snooze_string)
 
-                self.edit(name, {'due': snooze.strftime('%Y-%m-%d %H:%M:%S.%f')})
+                self.edit(name, {'due': snooze.strftime(DATE_FORMAT)})
             else:
                 print colored.red("This todo doesn't exist. Please check the spelling.")
         except ValueError:
             ValueError(colored.red("Bad Snooze Fomat: Expected Formats (due_rules  or YYYY-MM-DD)"))
+
+    def _create_dynamic_folder_structure(self):
+        
+        schedule = self._base.get('/schedule', None)
+        now = datetime.now()
+        today = datetime(now.year, now.month, now.day)
+        if schedule['UPDATED'] is not None:
+            updated_time = datetime.strptime(schedule['UPDATED'], DATE_FORMAT)
+            updated_day = datetime(updated_time.year, updated_time.month, updated_time.day)
+            if today == updated_day:
+                print "Not Going to Calculate."
+                return schedule
+
+        dynamic_folders = {'this_year': [], 'this_month': [], 'this_week': [],
+                           'next_week': [], 'today': [], 'tommorrow': [], 'UPDATED': None}
+        todos = self.fetch_todos()
+        for key in todos.keys():
+            todo = todos[key]
+            if 'due' in todo:
+                duetime = datetime.strptime(todo['due'], DATE_FORMAT)
+                if today.year == duetime.year:
+                    dynamic_folders['this_year'].append(todo)
+                    if today.month == duetime.month:
+                        dynamic_folders['this_month'].append(todo)
+                        if today.day == duetime.day:
+                            dynamic_folders['today'].append(todo)
+
+                delta_end_of_week = timedelta(hours = ((7 - today.weekday())*24))
+                end_of_week = today + delta_end_of_week
+                if duetime <=  end_of_week:
+                    dynamic_folders['this_week'].append(todo)
+                delta_end_of_next_week = timedelta(hours = ((14 - today.weekday())*24))
+                end_of_next_week = today + delta_end_of_next_week
+                if duetime > end_of_week and duetime <= end_of_next_week:
+                    dynamic_folders['next_week'].append(todo)
+                tmrw_end = today + timedelta(hours=48)
+                tmrw_start =  today + timedelta(hours=24)
+                if duetime > tmrw_start and duetime <= tmrw_end:
+                    dynamic_folders['tommorrow'].append(todo)
+        dynamic_folders['UPDATED'] = datetime.now().strftime(DATE_FORMAT)
+        self._base.put('/', 'schedule', dynamic_folders)
+        return dynamic_folders

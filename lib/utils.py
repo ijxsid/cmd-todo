@@ -11,7 +11,14 @@ for more cursor magic things, see http://www.termsys.demon.co.uk/vtansi.htm#curs
 MOVE_CURSOR_UP = '\x1b[1A'
 ERASE_LINE = '\x1b[2K'
 
+"""
+Our System wide date_format.
+"""
+DATE_FORMAT = '%Y-%m-%d %H:%M'
 
+"""
+Counter Class for making Ever-Increasing Counters.
+"""
 class Counter(object):
     def __init__(self, name, base):
         self._todobase = base
@@ -64,8 +71,7 @@ def parse_duestring(duestring, start_datetime=None):
         if start_datetime is None:
             time_now = datetime.now()
         else:
-            time_now = datetime.strptime(start_datetime, '%Y-%m-%d %H:%M:%S.%f')
-            print "time_now ", time_now
+            time_now = datetime.strptime(start_datetime, DATE_FORMAT)
         due_datetime = time_now
         for match in matches:
             sign = match[0]
