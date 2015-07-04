@@ -1,5 +1,5 @@
 import random
-from clint.textui import puts, indent, colored
+from clint.textui import puts,colored
 from datetime import datetime, timedelta
 import re
 
@@ -66,7 +66,7 @@ def parse_duestring(duestring, start_datetime=None):
         That means the duestring is of the format [+,-][0-9][hdwmy]
 
         """
-        pattern = re.compile('(\+|\-)([0-9]+)([Mhdwmy])')
+        pattern = re.compile(r'(\+|\-)([0-9]+)([Mhdwmy])')
         matches = pattern.findall(duestring)
         if start_datetime is None:
             time_now = datetime.now()
@@ -104,7 +104,7 @@ def parse_duestring(duestring, start_datetime=None):
         return due_datetime
 
 def clean_tags(tags):
-    pattern = re.compile('\s*(\w+)')
+    pattern = re.compile(r'\s*(\w+)')
     res = []
     for tag in tags:
         match = pattern.match(tag)
@@ -113,7 +113,7 @@ def clean_tags(tags):
     return res
 
 def clean_foldername(foldername):
-    pattern = re.compile('\s*(\w*)')
+    pattern = re.compile(r'\s*(\w*)')
     match = pattern.match(foldername)
     res = match.group(1)
     return res.lower()

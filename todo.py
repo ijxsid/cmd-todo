@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from firebase import firebase
-from clint.textui import puts, indent, colored
+from clint.textui import puts, colored
 import argparse
 import config
 from lib.todocollection import TodoCollection

@@ -1,5 +1,4 @@
 from utils import foreach, print_todo_item, Counter, parse_duestring, DATE_FORMAT
-from datetime import datetime, timedelta
 from timeit import Timer
 from clint.textui import colored
 from schedule import Schedule
