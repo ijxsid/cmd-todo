@@ -2,16 +2,12 @@
 from firebase import firebase
 from clint.textui import puts, indent, colored
 import argparse
-import random
 import config
-import json
-from lib.utils import Counter
 from lib.todocollection import TodoCollection
 from lib.userprofile import Profile
 from workers.todoeditor import TodoEditor
 from lib.rewards import Rewards
 import info
-from lib.timeit import Timer
 
 todobase = firebase.FirebaseApplication(config.FIREBASE_URL, None)
 _version = info.VERSION

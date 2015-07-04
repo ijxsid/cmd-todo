@@ -42,7 +42,7 @@ class TodoCollection(object):
             todos = {key: todos[key] for key in todos.keys() if self._is_tagged(key, tags)}
         foreach(todos, print_todo_item)
 
-    def add(self, task, bounty, duetime=None, tags=[]):
+    def add(self, task, bounty, duetime=None, tags=[], folder=None):
         assert isinstance(task, str)
         assert len(task) > 0, "Task Cannot be left empty."
         assert isinstance(bounty, int)
@@ -114,7 +114,6 @@ class TodoCollection(object):
             item_tags = self._todos[foldername][key]['tags']
         except KeyError:
             item_tags = []
-            pass
         return any(tag in item_tags for tag in tags)
 
     def _make_folder_structure(self, todos):
