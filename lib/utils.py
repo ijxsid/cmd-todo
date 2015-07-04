@@ -65,6 +65,7 @@ def parse_duestring(duestring, start_datetime=None):
             time_now = datetime.now()
         else:
             time_now = datetime.strptime(start_datetime, '%Y-%m-%d %H:%M:%S.%f')
+            print "time_now ", time_now
         due_datetime = time_now
         for match in matches:
             sign = match[0]

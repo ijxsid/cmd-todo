@@ -154,13 +154,6 @@ def main():
         structure = todos.fetch_structure()
         print structure
 
-    elif args.timer:
-        time1 = '13:25:54'
-        time2 = '67:39:33'
-        timer = Timer(True)
-        time3 = timer.add_time(time1, time2)
-        print time3
-
 
 
 

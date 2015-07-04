@@ -52,7 +52,7 @@ class TodoCollection(object):
         name = 'todo' + str(N+1)
         todo = {'task': task, 'bounty': bounty, 'done': False}
         if duetime is not None:
-            todo['due'] = str(duetime)
+            todo['due'] = duetime.strftime('%Y-%m-%d %H:%M:%S.%f')
         if tags != []:
             todo['tags'] = tags
         if not folder or folder ==' ':
@@ -152,16 +152,18 @@ class TodoCollection(object):
                 newtodo = {'time_taken': '0:00:00'}
                 self.edit(name, newtodo)
 
-    def handle_snooze(self, name, snooze):
+    def handle_snooze(self, name, snooze_string):
         try:
             if name in self._structure.keys():
                 folder = self._structure[name]
                 todo = self._todos[folder][name]
                 if 'due' in todo.keys():
-                    snooze_string = parse_duestring(snooze, todo['due'])
+                    snooze = parse_duestring(snooze_string, todo['due'])
                 else:
-                    snooze_string = parse_duestring(snooze)
-                self.edit(name, {'due': snooze_string})
+                    snooze = parse_duestring(snooze_string)
 
+                self.edit(name, {'due': snooze.strftime('%Y-%m-%d %H:%M:%S.%f')})
+            else:
+                print colored.red("This todo doesn't exist. Please check the spelling.")
         except ValueError:
             ValueError(colored.red("Bad Snooze Fomat: Expected Formats (due_rules  or YYYY-MM-DD)"))
