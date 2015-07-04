@@ -41,6 +41,7 @@ def main():
     parser.add_argument('--structure', action='store_true')
     parser.add_argument('--timer', action='store_true')
     parser.add_argument('--reset', action='store_true')
+    parser.add_argument('--snooze', nargs=2, metavar=('task', 'snooze'))
     args = parser.parse_args()
     todos = TodoCollection(todobase, '/todos', 'todo')
     rewards = Rewards(todobase, '/rewards', 'reward')
@@ -80,6 +81,9 @@ def main():
             todos.reset_timer_for_todo(args.edit[0])
         else:
             editor.editflow(args.edit[0])
+
+    elif args.snooze:
+        todos.handle_snooze(args.snooze[0], args.snooze[1])
 
     elif args.get is not None:
         if args.reward:

@@ -53,7 +53,7 @@ def print_reward_item(item, key=None):
     else:
         puts( colored.red('404: Nothing Found'))
 
-def parse_duestring(duestring):
+def parse_duestring(duestring, start_datetime=None):
     if duestring[0] in ['+', '-']:
         """
         That means the duestring is of the format [+,-][0-9][hdwmy]
@@ -61,7 +61,10 @@ def parse_duestring(duestring):
         """
         pattern = re.compile('(\+|\-)([0-9]+)([Mhdwmy])')
         matches = pattern.findall(duestring)
-        time_now = datetime.now()
+        if start_datetime is None:
+            time_now = datetime.now()
+        else:
+            time_now = datetime.strptime(start_datetime, '%Y-%m-%d %H:%M:%S.%f')
         due_datetime = time_now
         for match in matches:
             sign = match[0]

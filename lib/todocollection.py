@@ -1,6 +1,7 @@
-from utils import foreach, print_todo_item, Counter
+from utils import foreach, print_todo_item, Counter, parse_duestring
 from datetime import datetime
 from timeit import Timer
+from clint.textui import colored
 
 class TodoCollection(object):
 
@@ -150,3 +151,17 @@ class TodoCollection(object):
             if 'time_taken' in todo.keys():
                 newtodo = {'time_taken': '0:00:00'}
                 self.edit(name, newtodo)
+
+    def handle_snooze(self, name, snooze):
+        try:
+            if name in self._structure.keys():
+                folder = self._structure[name]
+                todo = self._todos[folder][name]
+                if 'due' in todo.keys():
+                    snooze_string = parse_duestring(snooze, todo['due'])
+                else:
+                    snooze_string = parse_duestring(snooze)
+                self.edit(name, {'due': snooze_string})
+
+        except ValueError:
+            ValueError(colored.red("Bad Snooze Fomat: Expected Formats (due_rules  or YYYY-MM-DD)"))
