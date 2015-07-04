@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from utils import DATE_FORMAT, print_todo_item
 from clint.textui import colored
+
 class Schedule(object):
 
     def __init__(self, base, todos):
