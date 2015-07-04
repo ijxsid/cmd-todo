@@ -5,7 +5,7 @@ import argparse
 import config
 from lib.todocollection import TodoCollection
 from lib.userprofile import Profile
-from workers.todoeditor import TodoEditor
+from lib.todoeditor import TodoEditor
 from lib.rewards import Rewards
 import info
 

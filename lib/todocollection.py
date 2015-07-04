@@ -54,7 +54,7 @@ class TodoCollection(object):
             todo['due'] = str(duetime)
         if tags != []:
             todo['tags'] = tags
-        if not folder:
+        if not folder or folder ==' ':
             folder = 'MAIN' #Our default folder, uppercase to be unique
         res = self._base.put(self._url + "/" + folder, name, todo)
         print res
@@ -67,6 +67,8 @@ class TodoCollection(object):
         # TODO: Need to find a better way to print responses.
         if name in self._structure.keys():
             foldername = self._structure[name]
+            if 'task' in newtodo.keys():
+                assert newtodo not in ['', ' '], "Task Cannot be left empty."
             res = self._base.patch(self._url + "/" + foldername + "/" + name , newtodo)
             print res
         else:

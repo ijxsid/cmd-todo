@@ -1,5 +1,8 @@
 import random
 from clint.textui import puts, indent, colored
+from datetime import datetime, timedelta
+import re
+
 
 # Some Cursor UTILS
 """
@@ -49,3 +52,43 @@ def print_reward_item(item, key=None):
               + " -> redeemed " + ( str(item['redeemed']) ) + " times." )
     else:
         puts( colored.red('404: Nothing Found'))
+
+def parse_duestring(duestring):
+    if duestring[0] in ['+', '-']:
+        """
+        That means the duestring is of the format [+,-][0-9][hdwmy]
+
+        """
+        pattern = re.compile('(\+|\-)([0-9]+)([Mhdwmy])')
+        matches = pattern.findall(duestring)
+        time_now = datetime.now()
+        due_datetime = time_now
+        for match in matches:
+            sign = match[0]
+            n = int(match[1])
+            unit = match[2]
+            if unit == 'h':
+                delta = timedelta(hours=n)
+            elif unit == 'M':
+                delta = timedelta(minutes=n)
+            elif unit == 'd':
+                delta = timedelta(days=n)
+            elif unit == 'w':
+                delta = timedelta(weeks=n)
+            elif unit == 'm':
+                delta = timedelta(days=n*30)
+            elif unit == 'y':
+                delta = timedelta(days=n*365)
+            else:
+                delta = timedelta(days=0)
+
+            if sign == '+':
+                due_datetime += delta
+            else:
+                due_datetime -= delta
+        return due_datetime
+
+    else:
+        date_format = '%Y-%m-%d'
+        due_datetime = datetime.strptime(duestring, date_format)
+        return due_datetime

@@ -1,5 +1,5 @@
 from clint.textui import puts, colored, indent
-from datetime import datetime, timedelta
+from utils import parse_duestring
 import re
 class TodoEditor(object):
     def __init__(self, todos):
@@ -11,13 +11,26 @@ class TodoEditor(object):
         print ("\tThis is Dynamic Addflow, so to avoid write long lines in the \n"
                + "\tcommand line. Add a new todo: \n\n")
 
+        try:
+            task = raw_input("Whats the thing! (req): ").strip()
+            if task in ['', ' ']:
+                raise ValueError
+        except ValueError, e:
+            raise ValueError(colored.red("Task cannot be left Empty"))
 
-        task = raw_input("Whats the thing! (req): ").strip()
-        bounty = int(raw_input("How much is the reward (integer):(" + str(1) + ") ") or 1)
-        due = raw_input("When its' due? (YYYY-MM-DD HH:mm)/ +(due_rules): ").strip()
-        due_datetime = None
-        if (due):
-            due_datetime = self._parse_due(due)
+        try:
+            bounty = int(raw_input("How much is the reward (integer):(" + str(1) + ") ") or 1)
+        except ValueError, e:
+            raise ValueError(colored.red("Bounty should be an integer"))
+
+        try:
+            due = raw_input("When its' due? (YYYY-MM-DD HH:mm)/ +(due_rules): ").strip()
+            due_datetime = None
+            if (due):
+                due_datetime = parse_duestring(due)
+        except ValueError, e:
+            raise ValueError(colored.red("Bad Date Fomat: Expected Formats (YYYY-MM-DD or due_rules)"))
+
         tags = raw_input("Tags (comma seprated): ").strip().split(',')
         tags = self._clean_tags(tags)
         foldername = raw_input("Folder/Project :" ).strip()
@@ -32,19 +45,29 @@ class TodoEditor(object):
         assert name in self._todosdata.keys(), "No todo with name " + name + " in database."
         todo = self._todosdata[name]
         task = raw_input("Whats the thing! ("+todo['task'] +"): ").strip()
-
-        bounty = int(raw_input("How much is the reward ("+str(todo['bounty'])+") :"))
-
-        done = int(raw_input("1 if done, 0 if not done yet: ") or 0)
-        done = bool(done)
+        try:
+            bounty = int(raw_input("How much is the reward ("+str(todo['bounty'])+") :") or todo['bounty'])
+        except ValueError, e:
+            raise ValueError(colored.red("Bounty should be an integer"))
+        try:
+            done = int(raw_input("1 if done, 0 if not done yet: ") or todo['done'])
+            if done not in [1, 0]:
+                raise ValueError
+            done = bool(done)
+        except ValueError, e:
+            raise ValueError(colored.red("Done should either be 1 or 0"))
         # due_datetime handling
-        duestring = 'None'
-        if 'due' in todo.keys():
-            duestring = todo['due']
-        due = raw_input("When its' due? (Prev: "+ duestring +" ): ").strip()
-        due_datetime = None
-        if (due):
-            due_datetime = self._parse_due(due)
+        try:
+            duestring = 'None'
+            if 'due' in todo.keys():
+                duestring = todo['due']
+            due = raw_input("When its' due? (Prev: "+ duestring +" ): ").strip()
+            due_datetime = None
+            if (due):
+                due_datetime = parse_duestring(due)
+        except ValueError, e:
+            raise ValueError(colored.red("Bad Date Fomat: Expected Formats (YYYY-MM-DD or due_rules)"))
+
         # tags_handling
         tag_string = 'None'
         if 'tags' in todo.keys():
@@ -58,7 +81,7 @@ class TodoEditor(object):
 
         newtodo = {}
 
-        if (task != '' or task != todo['task']):
+        if (task != '' and task != todo['task']):
             newtodo['task'] = task
         if (bounty != todo['bounty']):
             newtodo['bounty'] = bounty
@@ -73,52 +96,13 @@ class TodoEditor(object):
         if (newfolder != ''):
             self._todos.move_to_folder(newfolder, name)
 
-    def _parse_due(self, duestring):
-        if duestring[0] in ['+', '-']:
-            """
-            That means the duestring is of the format [+,-][0-9][hdwmy]
-
-            """
-            pattern = re.compile('(\+|\-)([0-9]+)([Mhdwmy])')
-            matches = pattern.findall(duestring)
-            time_now = datetime.now()
-            due_datetime = time_now
-            for match in matches:
-                sign = match[0]
-                n = int(match[1])
-                unit = match[2]
-                if unit == 'h':
-                    delta = timedelta(hours=n)
-                elif unit == 'M':
-                    delta = timedelta(minutes=n)
-                elif unit == 'd':
-                    delta = timedelta(days=n)
-                elif unit == 'w':
-                    delta = timedelta(weeks=n)
-                elif unit == 'm':
-                    delta = timedelta(days=n*30)
-                elif unit == 'y':
-                    delta = timedelta(days=n*365)
-                else:
-                    delta = timedelta(days=0)
-
-                if sign == '+':
-                    due_datetime += delta
-                else:
-                    due_datetime -= delta
-            return due_datetime
-
-        else:
-            date_format = '%Y-%m-%d'
-            due_datetime = datetime.strptime(duestring, date_format)
-            return due_datetime
-
     def _clean_tags(self, tags):
         pattern = re.compile('\s*(\w+)')
         res = []
         for tag in tags:
             match = pattern.match(tag)
-            res.append(match.group(1).lower())
+            if match is not None:
+                res.append(match.group(1).lower())
         return res
 
     def _clean_foldername(self, foldername):
