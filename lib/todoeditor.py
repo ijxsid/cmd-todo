@@ -1,5 +1,5 @@
 from clint.textui import puts, colored, indent
-from utils import parse_duestring
+from utils import parse_duestring, clean_tags, clean_foldername
 import re
 class TodoEditor(object):
     def __init__(self, todos):
@@ -32,9 +32,9 @@ class TodoEditor(object):
             raise ValueError(colored.red("Bad Date Fomat: Expected Formats (YYYY-MM-DD or due_rules)"))
 
         tags = raw_input("Tags (comma seprated): ").strip().split(',')
-        tags = self._clean_tags(tags)
+        tags = clean_tags(tags)
         foldername = raw_input("Folder/Project :" ).strip()
-        foldername = self._clean_foldername(foldername)
+        foldername = clean_foldername(foldername)
 
         self._todos.add(task, bounty, due_datetime, tags, foldername)
 
@@ -73,11 +73,11 @@ class TodoEditor(object):
         if 'tags' in todo.keys():
             tag_string = ", ".join(todo['tags'])
         tags = raw_input("Tags (Prev: "+tag_string+" )\n New: ").strip().split(',')
-        tags = self._clean_tags(tags)
+        tags = clean_tags(tags)
         # folder_handling
         folder = self._todostructure[name]
         newfolder = raw_input("Folder (Prev: "+ folder +" ): ").strip()
-        newfolder = self._clean_foldername(newfolder)
+        newfolder = clean_foldername(newfolder)
 
         newtodo = {}
 
@@ -95,18 +95,3 @@ class TodoEditor(object):
         self._todos.edit(name, newtodo)
         if (newfolder != ''):
             self._todos.move_to_folder(newfolder, name)
-
-    def _clean_tags(self, tags):
-        pattern = re.compile('\s*(\w+)')
-        res = []
-        for tag in tags:
-            match = pattern.match(tag)
-            if match is not None:
-                res.append(match.group(1).lower())
-        return res
-
-    def _clean_foldername(self, foldername):
-        pattern = re.compile('\s*(\w*)')
-        match = pattern.match(foldername)
-        res = match.group(1)
-        return res.lower()

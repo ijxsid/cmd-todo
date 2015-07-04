@@ -92,3 +92,18 @@ def parse_duestring(duestring):
         date_format = '%Y-%m-%d'
         due_datetime = datetime.strptime(duestring, date_format)
         return due_datetime
+
+def clean_tags(tags):
+    pattern = re.compile('\s*(\w+)')
+    res = []
+    for tag in tags:
+        match = pattern.match(tag)
+        if match is not None:
+            res.append(match.group(1).lower())
+    return res
+
+def clean_foldername(foldername):
+    pattern = re.compile('\s*(\w*)')
+    match = pattern.match(foldername)
+    res = match.group(1)
+    return res.lower()
