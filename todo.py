@@ -11,6 +11,7 @@ from lib.userprofile import Profile
 from workers.todoeditor import TodoEditor
 from lib.rewards import Rewards
 import info
+from lib.timeit import Timer
 
 todobase = firebase.FirebaseApplication(config.FIREBASE_URL, None)
 _version = info.VERSION
@@ -42,7 +43,8 @@ def main():
     # Add Redeem optional argument
     parser.add_argument('-x','--redeem', nargs='+', metavar=('reward', 'times'))
     parser.add_argument('--structure', action='store_true')
-
+    parser.add_argument('--timer', action='store_true')
+    parser.add_argument('--reset', action='store_true')
     args = parser.parse_args()
     todos = TodoCollection(todobase, '/todos', 'todo')
     rewards = Rewards(todobase, '/rewards', 'reward')
@@ -74,6 +76,12 @@ def main():
         if args.folder:
             # Editing Folder is equivalent to moving between folders.
             todos.move_to_folder(args.folder[0], args.edit[0])
+        elif args.timer and args.reset:
+            todos.start_time_for_todo(args.edit[0], reset=True)
+        elif args.timer:
+            todos.start_time_for_todo(args.edit[0])
+        elif args.reset:
+            todos.reset_timer_for_todo(args.edit[0])
         else:
             editor.editflow(args.edit[0])
 
@@ -145,6 +153,15 @@ def main():
     elif args.structure:
         structure = todos.fetch_structure()
         print structure
+
+    elif args.timer:
+        time1 = '13:25:54'
+        time2 = '67:39:33'
+        timer = Timer(True)
+        time3 = timer.add_time(time1, time2)
+        print time3
+
+
 
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 from utils import foreach, print_todo_item, Counter
 from datetime import datetime
+from timeit import Timer
 
 class TodoCollection(object):
 
@@ -124,3 +125,27 @@ class TodoCollection(object):
                 res_structure[name] = foldername
 
         return res_structure
+
+    def start_time_for_todo(self, name, reset=False):
+        if name in self._structure.keys():
+            folder = self._structure[name]
+            todo = self._todos[folder][name]
+            if 'time_taken' in todo.keys() and not(reset):
+                timer = Timer(todo['done'], todo['time_taken'])
+            else:
+                timer = Timer(todo['done'])
+            end, done = timer.print_elapsed()
+            newtodo = {'time_taken': end}
+            if done is not None:
+                newtodo['done'] = done
+            self.edit(name, newtodo)
+        else:
+            print "This todo doesn't exist"
+
+    def reset_timer_for_todo(self, name):
+        if name in self._structure.keys():
+            folder = self._structure[name]
+            todo = self._todos[folder][name]
+            if 'time_taken' in todo.keys():
+                newtodo = {'time_taken': '0:00:00'}
+                self.edit(name, newtodo)
