@@ -7,7 +7,9 @@ from lib.todocollection import TodoCollection
 from lib.userprofile import Profile
 from lib.todoeditor import TodoEditor
 from lib.rewards import Rewards
+from lib.schedule import Schedule
 import info
+
 
 todobase = firebase.FirebaseApplication(config.FIREBASE_URL, None)
 _version = info.VERSION
@@ -156,7 +158,8 @@ def main():
         print structure
 
     elif args.schedule:
-        print todos.fetch_schedule()
+        schedule = Schedule(todobase, todos.fetch_todos)
+        schedule.print_schedule()
 
 
 
