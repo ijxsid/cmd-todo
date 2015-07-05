@@ -17,6 +17,14 @@ Our System wide date_format.
 DATE_FORMAT = '%Y-%m-%d %H:%M'
 
 """
+Email Regex String almost similar to RFC5322
+"""
+
+EMAIL_REGEX = re.compile("([a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`"
+                    "{|}~-]+)*(@|\sat\s)(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(\.|"
+                    "\sdot\s))+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)")
+
+"""
 Counter Class for making Ever-Increasing Counters.
 """
 class Counter(object):

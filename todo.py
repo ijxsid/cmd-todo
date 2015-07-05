@@ -45,7 +45,9 @@ def main():
     parser.add_argument('--reset', action='store_true')
     parser.add_argument('--snooze', nargs=2, metavar=('task', 'snooze'))
     parser.add_argument('--schedule', action='store_true')
-    
+    parser.add_argument('--editinfo', action='store_true')
+
+
     args = parser.parse_args()
     todos = TodoCollection(todobase, '/todos', 'todo')
     rewards = Rewards(todobase, '/rewards', 'reward')
@@ -148,7 +150,10 @@ def main():
 
     elif args.me:
         user.update()
-        user.show_profile()
+        if args.editinfo:
+            user.update_info_flow()
+        else:
+            user.show_profile()
 
     elif args.version:
         puts( "Version: " + _version)

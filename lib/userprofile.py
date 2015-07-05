@@ -1,6 +1,6 @@
 from clint.textui import puts, indent, colored, progress
 from goodtable import Goodtable
-
+from profile_editor import ProfileEditor
 class Profile(object):
 
     def __init__(self, base, url, todos, rewards):
@@ -17,9 +17,21 @@ class Profile(object):
         user_profile = {'available': total_points, 'points': earned_points,
                         'done': items_done, 'total_items': total_items,
                         'rewards_redeemed': rewards_redeemed}
+        if 'info' in self._profile.keys():
+            user_profile['info'] = self._profile['info']
         self._base.put(self._url, 'me', user_profile)
         self._profile = self._base.get(self._url, 'me')
 
+    def update_info_flow(self):
+        profile_editor = ProfileEditor(self._profile)
+        new_info = profile_editor.editflow()
+        self._update_info(new_info)
+
+    def _update_info(self, new_info):
+        self._profile['info'] = new_info
+        res = self._base.put(self._url, 'me', self._profile)
+
+        print res
 
 
     def _calculate_points(self, todos, main=False):
@@ -54,6 +66,11 @@ class Profile(object):
         """
         prints out user Dashboard.
         """
+        if 'info' in self._profile.keys():
+            print "="*80
+            print "Name: " + self._profile['info']['name']
+            print "Email: " + self._profile['info']['email']
+            print "="*80
         table = Goodtable([30, 50], "Your Dashboard")
         table.add_row(['Total Tasks', str(self._profile['total_items'])] )
         table.add_row(['Total Done', str(self._profile['done'])])
