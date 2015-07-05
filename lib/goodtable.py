@@ -28,7 +28,6 @@ class Goodtable():
         self._headers = headers
         self._max_width = max_width
         self._rows = []
-        print "self._cols => ", self._cols
 
     def _get_printable_width(self, cols):
         result = []

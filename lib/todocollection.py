@@ -25,6 +25,9 @@ class TodoCollection(object):
     def fetch_todos(self):
         return {key: self._todos[foldername][key] for key, foldername in self._structure.iteritems()}
 
+    def fetch_folderwise_todos(self):
+        return self._todos
+
     def get_all(self, tags=None):
         todos = {key: self._todos[foldername][key] for key, foldername in self._structure.iteritems()}
 
