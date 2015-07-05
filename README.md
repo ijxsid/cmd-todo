@@ -3,7 +3,7 @@
 
 Manage your todos from command line.
 
-Current Version is 0.5alpha2 called "Warbler".
+Current Version is 0.5alpha3 called "Warbler".
 
 ### Features (DONE)
 - Add Todos + bounty
@@ -17,15 +17,24 @@ Current Version is 0.5alpha2 called "Warbler".
 - Due Dates/ times.
 - Folders/Project Categorization.
 - Snooze by Edit.
+- time-logging.
+- Snoozes.
+- timers.
+- User Dashboard in command line.
+- dynamic folders.
 
 
 ### Features (TODO)
-- User Dashboard in command line.
-- Snoozes.
 - Assigning to the other people.
-- timers.
-- time-logging.
-- dynamic folders.
+- Offline Support
+- Team project Management.
+- Wiki Help.
+- Testing.
+- User Accounts
+- Team Accounts.
+- Quadant System for Task Management.
+- Task Search.
+
 
 
 
