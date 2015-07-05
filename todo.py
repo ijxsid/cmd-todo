@@ -45,6 +45,7 @@ def main():
     parser.add_argument('--reset', action='store_true')
     parser.add_argument('--snooze', nargs=2, metavar=('task', 'snooze'))
     parser.add_argument('--schedule', action='store_true')
+    
     args = parser.parse_args()
     todos = TodoCollection(todobase, '/todos', 'todo')
     rewards = Rewards(todobase, '/rewards', 'reward')

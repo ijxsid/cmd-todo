@@ -1,4 +1,5 @@
 from clint.textui import puts, indent, colored, progress
+from goodtable import Goodtable
 
 class Profile(object):
 
@@ -8,7 +9,7 @@ class Profile(object):
         self._profile = self._base.get(self._url, 'me')
         self._todos = todos.fetch_todos()
         self._rewards = rewards.fetch_rewards()
-        self._progress_bar_size = 40
+        self._progress_bar_size = 30
 
     def update(self):
         total_points, earned_points, total_items, items_done, rewards_redeemed = self._calculate_points()
@@ -50,21 +51,26 @@ class Profile(object):
         """
         prints out user Dashboard.
         """
-
-        puts ( 'Total Items: ' +  colored.blue(str(self._profile['total_items'])))
-        puts ( 'Total Done: ' +  colored.green(str(self._profile['done'])))
+        table = Goodtable([30, 50], "Your Dashboard")
+        table.add_row(['Total Tasks', str(self._profile['total_items'])] )
+        table.add_row(['Total Done', str(self._profile['done'])])
         percent_done = (self._profile['done'] / float(self._profile['total_items']))*100
-        puts (self._print_progress_bar('Done', percent_done))
-        puts ( 'Total Points: ' +  colored.blue(str(self._profile['available'])))
+        table.add_row( self._print_progress_bar('Done', percent_done))
+        table.add_row(['Available Points', str(self._profile['available'])])
+        table.add_row(['Points Earned', str(self._profile['points'])])
 
-        puts ( 'Points Earned: ' +  colored.green(str(self._profile['points'])))
         percent_points = (self._profile['points'] / float(self._profile['available']))*100
-        puts ( self._print_progress_bar('Points gained', percent_points ))
-        puts ( 'Rewards Redeemed: ' +  colored.green(str(self._profile['rewards_redeemed'])))
+        table.add_row( self._print_progress_bar('XP Level', percent_points))
 
+
+        table.add_row(['Rewards Redeemed', str(self._profile['rewards_redeemed'])])
+
+        table.print_table()
+        
     def _print_progress_bar(self, label, percent, ex_size=100):
         size = self._progress_bar_size
         scale = float(size)/ex_size
         bar_size = int(scale*percent)
         bar = '#'* bar_size + ">" + ' '*(size-bar_size-1) if bar_size < size-1 else '#'*bar_size
-        return label + ': ['+ colored.green(bar)  +']'
+        percent_string = "{:.2%}".format(percent/100)
+        return [label , '['+ (bar)  +']' + percent_string]

@@ -28,6 +28,7 @@ class Goodtable():
         self._headers = headers
         self._max_width = max_width
         self._rows = []
+        print "self._cols => ", self._cols
 
     def _get_printable_width(self, cols):
         result = []
@@ -60,6 +61,8 @@ class Goodtable():
         label_border_center = "{data:^{width}}".format(data=label_border_bottom, width=self._max_width)
 
         print label_border_center + "\n" +label_string_center1 + "\n" + label_border_center
+
+
     def _print_header(self):
         if len(self._headers) > 0:
             self._print_border()
