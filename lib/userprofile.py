@@ -69,13 +69,22 @@ class Profile(object):
 
         table.print_table()
 
-        folderstable = Goodtable([80], "Folders/Projects")
+        folderstable = Goodtable([80], "Folders/Projects Progress")
         folderstable.print_table()
-        print "\n\n"
-        self._print_folderwise_dash()
+        print "\n"
+        self._print_dash(folder=True)
 
-    def _print_folderwise_dash(self):
-        todos = self._todos.fetch_folderwise_todos()
+        print "\n\n"
+        tagstable = Goodtable([80], 'Tags Progress')
+        tagstable.print_table()
+        print "\n"
+        self._print_dash(folder=False)
+
+    def _print_dash(self, folder=True):
+        if folder:
+            todos = self._todos.fetch_folderwise_todos()
+        else:
+            todos = self._todos.fetch_tagwise_todos()
         for foldername in todos.keys():
             folder = todos[foldername]
             points, earned, items, done, _ = self._calculate_points(folder)

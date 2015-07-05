@@ -28,6 +28,9 @@ class TodoCollection(object):
     def fetch_folderwise_todos(self):
         return self._todos
 
+    def fetch_tagwise_todos(self):
+        return self._todos_by_tag()
+
     def get_all(self, tags=None):
         todos = {key: self._todos[foldername][key] for key, foldername in self._structure.iteritems()}
 
@@ -174,3 +177,17 @@ class TodoCollection(object):
                 print colored.red("This todo doesn't exist. Please check the spelling.")
         except ValueError:
             ValueError(colored.red("Bad Snooze Fomat: Expected Formats (due_rules  or YYYY-MM-DD)"))
+
+    def _todos_by_tag(self):
+        result = {}
+        for key in self._structure.keys():
+            foldername = self._structure[key]
+            todo = self._todos[foldername][key]
+            if 'tags' in todo.keys():
+                for tag in todo['tags']:
+                    if tag in result.keys():
+                        result[tag][key] = todo
+                    else:
+                        result[tag] = {key: todo}
+
+        return result
