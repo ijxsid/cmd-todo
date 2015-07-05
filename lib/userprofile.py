@@ -89,13 +89,21 @@ class Profile(object):
             folder = todos[foldername]
             points, earned, items, done, _ = self._calculate_points(folder)
             table = Goodtable([30, 50],  foldername.capitalize())
-            table.add_row(['Tasks', str(done) + "/" + str(items)])
-            table.add_row(['XP Points', str(earned) + "/" + str(points)])
+            percent_done = (done/float(items))*100
+            progress_bar_done = self._print_progress_bar("Label", percent_done, 20)[1]
+
+            table.add_row(['Tasks', "{:10}".format(str(done) + "/" + str(items)) + progress_bar_done ])
+            percent_points = (earned/float(points))*100
+            progress_bar_points = self._print_progress_bar("Label", percent_points, 20)[1]
+            table.add_row(['XP Points', "{:10}".format(str(earned) + "/" + str(points)) + progress_bar_points ])
             table.print_table()
 
 
-    def _print_progress_bar(self, label, percent, ex_size=100):
-        size = self._progress_bar_size
+    def _print_progress_bar(self, label, percent, width=None, ex_size=100):
+        if width is None:
+            size = self._progress_bar_size
+        else:
+            size = width
         scale = float(size)/ex_size
         bar_size = int(scale*percent)
         bar = '#'* bar_size + ">" + ' '*(size-bar_size-1) if bar_size < size-1 else '#'*bar_size
