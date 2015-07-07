@@ -5,23 +5,37 @@ Manage your todos from command line.
 
 Current Version is 0.5alpha3 called "Warbler".
 
-### Features (DONE)
-- Add Todos + bounty
-- Get All Todos
-- Get Todos by name
-- Mark the todos done.
-- Command line coloring.
-- Tags
-- Filters
-- Rewards.
-- Due Dates/ times.
-- Folders/Project Categorization.
-- Snooze by Edit.
-- time-logging.
-- Snoozes.
-- timers.
-- User Dashboard in command line.
-- dynamic folders.
+## RoadMap
+
+  ### Features (DONE)
+  - Add Todos + bounty
+  - Get All Todos
+  - Get Todos by name
+  - Mark the todos done.
+  - Command line coloring.
+  - Tags
+  - Filters
+  - Rewards.
+  - Due Dates/ times.
+  - Folders/Project Categorization.
+  - Snooze by Edit.
+  - time-logging.
+  - Snoozes.
+  - timers.
+  - User Dashboard in command line.
+  - dynamic folders.
+
+  ### Features (In Development)
+  - Assigning to the other people.
+  - Offline Support
+  - Team project Management.
+  - Wiki Help.
+  - Testing.
+  - User Accounts
+  - Team Accounts.
+  - Quadant System for Task Management
+  - Task Search.
+
 
 
 ##Usage
@@ -232,19 +246,54 @@ __NOTE__: You can't delete multiple folders in delete a folder command, and that
  python todo.py -m/--me --editinfo
  ```
  
+### 9. Schedule
+- Viewing your Schedule, which is equivalent to dividing your tasks into folders like "Today", "Tommorrow", "Next Week" etc.
+ > --schedule command with no arguments.
+ ```bash
+ python todo.py --schedule
+ ```
+ 
+### 10. Timers.
+ > Timers are an important feature since we wanted to do timelogging within a project/task management app. Many apps don't do this,
+ but its most natural for the timelogging to be in a todo app.
+ 
+ > Timer commands are nested in edit commands since they somehow change some data associated with todos they run on.
+
+- Start a timer for todo
+ > --edit with one argument that is the name of the todo on which timer should run, with  --timer command.
+ ```bash
+ python todo.py --edit todo --timer
+ ```
+ 
+__how to stop a timer?__: with Ctrl+C.(or Cmd+C in mac)
+__NOTE__: the above command behaves like a pause/play button, if todo already has time associated with it, timer will start from there.
+If you however want to start timer from zero even though todo has time associated with it, then look for "Reset and start timer for todo" commands
+introduced below. 
+ 
+- Reset the timer for the todo.
+
+ > --edit with one argument that is the name of the todo, with --resertcommand. It will put todo's timer to 0:00:00.
+ ```bash
+ python todo.py --edit todo --reset
+ ```
+ 
+- Start and Reset timer for todos.
+ > If the todo has time associated with it, this command with change that to zero and run from the start.
+ 
+ > --edit with one argument that is the name of the todo, with --timer and --reset commands.
+ ```bash
+ python todo.py --edit todo --timer --reset
+ ```
+ 
+### 11. Version Checking.
+ > To check with version of the software you're using, supply -V or --version to the software.
+ 
+ ```bash
+ python todo.py -V/--version
+ ```
 
 
-
-### Features (TODO)
-- Assigning to the other people.
-- Offline Support
-- Team project Management.
-- Wiki Help.
-- Testing.
-- User Accounts
-- Team Accounts.
-- Quadant System for Task Management
-- Task Search.
+__NOTE__: There are lot more features coming and somedays we will move most of this help somewhere else.
 
 
 
