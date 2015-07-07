@@ -27,14 +27,14 @@ Current Version is 0.5alpha3 called "Warbler".
 ##Usage
 > This part of document is for main commands in the cmd-todo Suite.
 
-###1.Add a Todo/ Reward.
+### 1.Add a Todo/ Reward.
 > Adding a todo/task or Reward.
 
 - Quick Add ( fast add via command line.)
  > --add/-a with 2 args, task and bounty
-```bash
-python todo.py -a/--add [task] [bounty]
-```
+  ```bash
+  python todo.py -a/--add [task] [bounty]
+  ```
 
 __Note__: Quick Add still doesn't support due dates, tags and folders. [In works.]
 
@@ -52,7 +52,7 @@ python todo.py -a/--add
  python todo.py -a/--add [reward][bounty] -r/--reward
  ```
 
-###2.Print tasks/ rewards
+### 2.Print tasks/ rewards
  > How to go about printing/getting task, by tag, by folders etc.
 
 - Print All Tasks.
@@ -137,9 +137,103 @@ __Note__: atleast one argument must be specified to for above to filter by tag.
 
 - Print Reward by name.
  > --get/-g with --reward/-r with reward_name argument.
+
  ```bash
  python todo.py -g/--get -r/--reward reward_name
  ```
+
+### 3. Editing Todos.
+ - Edit a todo
+ > --edit/-e with one argument that is the name of the todo to be edited.
+ ```bash
+ python todo.py -e/--edit name
+ ```
+ 
+ - Move to different folder
+ > --edit/-e with one argument that is the name of the todo to be edited and --folder/-f 
+ with one argument that is the name of the destination folder.
+ ```bash
+ python todo.py -e/--edit name -f/--folder foldername
+ ```
+ 
+### 4. Snoozing a Task.
+ > --snooze with two argument, first is the todo name and second one is the snooze string(due time String).
+ ```bash
+ python todo.py --snooze name duetime_string
+ ``` 
+ 
+ __Duetime Strings__: They form an integral part of how we represent due times in more human ways in our system.
+ like you can write "+9h" as duetime_string if something is due in 9 hours. or you can use combination of duetime strings
+ to represent more complex due time, like for example, "+3w-2d+7h-20M" means 3 weeks ahead, then 2 days behind, then 7 hours ahead, and
+ finally -20 minutes behind. We also accept dates so you don't have to calculate time delta if you already have the due dates.
+ 
+ - Duetime string should either be a date string of the format "YYYY-mm-dd"(eg. 2015-07-05) or our own duetime strings like "+9h" or "+60M"
+ - Duetime string should either start with "+" or "-". "+" stands for ahead in time and "-" stands for behind in time.
+ - eg. duetimestring should have final time_classifier like "h", "m" etc to signify units of time.
+ - Acccepted time Units are:
+    * M - minutes.
+    * h - hours.
+    * d - days
+    * w - weeks (7 days)
+    * m - months (30 days)
+    * y - years (365 days)
+
+### 5. Deleting a todo/ reward/ folder.
+__NOTE__: Delete doesn't have short flag like "-d"("-d" is actually for marking something done.), Since delete is considered 
+a dangerous operation. You can't get back anything that is deleted.
+
+1. Deleting todos. (one or many)
+  > --delete with one or more arguments that are names of todos to be deleted.
+  ```bash
+  python todo.py --delete todo [todo...]
+  ```   
+
+2. Deleting rewards( one or many)
+  > --delete with one or more arguments that are name of rewards to be deleted, with --reward/-r command.
+  ```bash
+  python todo.py --delete reward [reward...] -r/--reward
+  ```
+
+3. Deleteting a folder.
+  > --delete wth one argument that is the name of the folder to be deleted, with --folder/-f command.
+  ```bash
+  python todo.py --delete foldername -f/--folder
+  ```
+
+__NOTE__: You can't delete multiple folders in delete a folder command, and that is by design.
+
+### 6. Marking a todo done.
+ > -d/--done command with one or more arguments that are name of the todos that are to be marked done.
+ ```bash
+ python todo.py -d/--done todo [todo...]
+ ```
+ 
+ (* Done and delete command is also in works.)
+ 
+### 7. Redeeming a Reward.
+ > --redeem/-x command with one argument that is the name of the reward and second is optional times argument.
+ ```bash
+ python todo -x/--redeem reward [times]
+ ```
+ 
+ - By Default times will be 1. This "times" field is important to take smaller rewards multiple times, for eg. "15 minutes break" reward
+ redeemed 3 times is actually 45 minutes break.
+ 
+### 8. User Profile/Dashboard
+- Viewing Dashboard/Profile
+ > --me/-m command to view your profile/dashboard
+ ```bash
+ python todo.py -m/--me
+ ```
+ 
+- Updating Email and Name.( And other info in future)
+ > --me/-m command with --editinfo command.
+ ```bash
+ python todo.py -m/--me --editinfo
+ ```
+ 
+
+
 
 ### Features (TODO)
 - Assigning to the other people.
@@ -149,7 +243,7 @@ __Note__: atleast one argument must be specified to for above to filter by tag.
 - Testing.
 - User Accounts
 - Team Accounts.
-- Quadant System for Task Management.
+- Quadant System for Task Management
 - Task Search.
 
 
