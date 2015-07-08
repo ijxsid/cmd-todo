@@ -8,28 +8,32 @@ class FileBaseApplication(object):
         self._data = {}
         self._firebase = firebase.FirebaseApplication(firebase_URL, None)
         self._opfile = opfile
-        
-        self._data = self._get_data()
         self._chfile = changes_file
         self._changes = {}
+        
+        self._data = self._get_data()
+        
         if os.path.isfile(self._chfile):
             with open(self._chfile) as datafile:
                 self._changes = json.load(datafile)
     
     def _get_data(self):
-        data = {}
+
         if os.path.isfile(self._opfile):
             print "file found"
             with open(self._opfile) as data_file:
                 data = json.load(data_file)
         else:
             print "file not found"
-            data = self._firebase.get('/', None)
-            with open(self._opfile, 'w') as outfile:
-                json.dump(data, outfile)
+            self._pull_data()
                 
         return data
-             
+    
+    def _pull_data(self):
+        data = self._firebase.get('/', None)
+        with open(self._opfile, 'w') as outfile:
+            json.dump(data, outfile)
+        
     def _get_data_from_url(self, url):
         url_components = filter(lambda x: x != '', url.split("/"))
                 
@@ -52,9 +56,10 @@ class FileBaseApplication(object):
             
     def _add_url_and_name(self, url, name):
         url_components = filter(lambda x: x != '', url.split("/"))
-        print "url_components =>", url_components        
-        result_url = "/" + "/".join(url_components)+ "/" + name
-        print "result_url =>", result_url
+        result_url = ""
+        if url_components:
+            result_url +=  "/" + "/".join(url_components)
+        result_url += "/" + name
         return result_url
     
     def _get_name_from_url(self, url):
@@ -138,6 +143,7 @@ class FileBaseApplication(object):
         self._minimize_changes()
         self._process_changes()
         os.remove(self._chfile)
+        self._pull_data()
         
         
         

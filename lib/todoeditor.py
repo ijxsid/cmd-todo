@@ -90,7 +90,7 @@ class TodoEditor(object):
         if (tags != []):
             newtodo['tags'] = tags
         if (due_datetime is not None):
-            newtodo['due'] = str(due_datetime)
+            newtodo['due'] = due_datetime
 
         self._todos.edit(name, newtodo)
         if (newfolder != ''):

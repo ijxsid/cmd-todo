@@ -166,7 +166,8 @@ def main():
         print structure
 
     elif args.schedule:
-        schedule = Schedule(todobase, todos.fetch_todos)
+        schedule = Schedule(todobase, todos.fetch_todos())
+        schedule.create_dynamic_folder_structure()
         schedule.print_schedule()
     
     todobase.save()

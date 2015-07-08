@@ -80,6 +80,8 @@ class TodoCollection(object):
             foldername = self._structure[name]
             if 'task' in newtodo.keys():
                 assert newtodo not in ['', ' '], "Task Cannot be left empty."
+            if 'due' in newtodo.keys():
+                newtodo['due'] = newtodo["due"].strftime(DATE_FORMAT)
             res = self._base.patch(self._url + "/" + foldername + "/" + name , newtodo)
             print res
         else:
