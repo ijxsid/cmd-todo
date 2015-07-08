@@ -125,3 +125,15 @@ def clean_foldername(foldername):
     match = pattern.match(foldername)
     res = match.group(1)
     return res.lower()
+
+def remove_common_elements(list1, list2, list3=None):
+    if list3 is None:
+        common_set = set(list1).intersection(list2)
+    else:
+        common_set = set(list1).intersection(list2).intersection(list3)
+    list1_res = list(set(list1) - common_set)
+    list2_res = list(set(list2) - common_set)
+    list3_res = None
+    if list3 is not None:
+        list3_res = list(set(list3) - common_set)
+    return (list1_res, list2_res, list3_res)
