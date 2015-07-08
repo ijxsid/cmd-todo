@@ -8,10 +8,11 @@ from lib.userprofile import Profile
 from lib.todoeditor import TodoEditor
 from lib.rewards import Rewards
 from lib.schedule import Schedule
+from lib.filebase import FileBaseApplication
 import info
 
 
-todobase = firebase.FirebaseApplication(config.FIREBASE_URL, None)
+todobase = FileBaseApplication(config.FIREBASE_URL)
 _version = info.VERSION
 
 
@@ -46,6 +47,7 @@ def main():
     parser.add_argument('--snooze', nargs=2, metavar=('task', 'snooze'))
     parser.add_argument('--schedule', action='store_true')
     parser.add_argument('--editinfo', action='store_true')
+    parser.add_argument('--sync', action='store_true')
 
 
     args = parser.parse_args()
@@ -166,7 +168,11 @@ def main():
     elif args.schedule:
         schedule = Schedule(todobase, todos.fetch_todos)
         schedule.print_schedule()
-
+    
+    todobase.save()
+    
+    if args.sync:
+        todobase.sync()
 
 
 

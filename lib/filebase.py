@@ -35,6 +35,8 @@ class FileBaseApplication(object):
                 
         result = self._data
         for comp in url_components:
+            if comp not in result.keys():
+                result[comp] = {}
             result = result[comp]
         
         return result
@@ -132,7 +134,7 @@ class FileBaseApplication(object):
     def sync(self):
         self._minimize_changes()
         self._process_changes()
-        # os.remove(self._chfile)
+        os.remove(self._chfile)
         
         
         
