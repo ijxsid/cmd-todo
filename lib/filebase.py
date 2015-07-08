@@ -119,17 +119,20 @@ class FileBaseApplication(object):
         
     
     def _process_changes(self):
-        if "ADD" in self._changes.keys():
-            inserts = self._changes["ADD"] + self._changes["EDIT"]
-            for r in inserts:
-                data = self.get(r, None)
-                url, name = self._get_name_from_url(r)
-                self._firebase.put(url, name, data)
-        if "DELETE" in self._changes.keys():
-            deletes  = self._changes["DELETE"]
-            for d in deletes:
-                url_res, name_res = self._get_name_from_url(d)
-                self._firebase.delete(url_res, name_res)
+        inserts = self._changes["ADD"] if "ADD" in self._changes.keys() else []
+        inserts += self._changes["EDIT"] if "EDIT" in  self._changes.keys() else []
+        deletes = self._changes["DELETE"] if "DELETE" in self._changes.keys() else []
+        
+
+        for r in inserts:
+            data = self.get(r, None)
+            url, name = self._get_name_from_url(r)
+            self._firebase.put(url, name, data)
+    
+
+        for d in deletes:
+            url_res, name_res = self._get_name_from_url(d)
+            self._firebase.delete(url_res, name_res)
     
     def sync(self):
         self._minimize_changes()
