@@ -9,6 +9,8 @@ class Schedule(object):
         self.NAME = 'schedule'
         self._todos = todos
         self._schedule = self._base.get('/'+ self.NAME, None)
+        self._order = ['UPDATED', 'today', 'tommorrow', 'this_week', 'next_week'
+                       'later_this_month', 'later_this_year', 'future', 'past_due']
 
     def create_dynamic_folder_structure(self):
 
@@ -84,14 +86,15 @@ class Schedule(object):
         return dynamic_folders
 
     def print_schedule(self):
-        for key in self._schedule.keys():
-            if key == 'UPDATED':
-                print colored.green(key.replace('_',' ').capitalize()) + ": " + str(self._schedule[key])
-            else:
-                if key == 'past_due':
-                    print colored.red(key.replace('_',' ').capitalize()) + ": " + "(tasks: "+str(len(self._schedule[key]))+")"
+        for key in self._order:
+            if key in self._schedule.keys():
+                if key == 'UPDATED':
+                    print colored.green(key.replace('_',' ').capitalize()) + ": " + str(self._schedule[key])
                 else:
-                    print colored.blue(key.replace('_',' ').capitalize()) + ": " + "(tasks: "+str(len(self._schedule[key]))+")"
-                for todo in self._schedule[key]:
-                    print_todo_item(todo, todo['key'])
-            print "\n"
+                    if key == 'past_due':
+                        print colored.red(key.replace('_',' ').capitalize()) + ": " + "(tasks: "+str(len(self._schedule[key]))+")"
+                    else:
+                        print colored.blue(key.replace('_',' ').capitalize()) + ": " + "(tasks: "+str(len(self._schedule[key]))+")"
+                    for todo in self._schedule[key]:
+                        print_todo_item(todo, todo['key'])
+                print "\n"
