@@ -1,5 +1,5 @@
 from datetime import datetime
-from utils import MOVE_CURSOR_UP
+from lib.utils import MOVE_CURSOR_UP
 import time, sys
 
 class Timer(object):
@@ -14,14 +14,14 @@ class Timer(object):
         end_time = self._add_time(self._time_taken, end_time)
         done = self._done_status
         donestring = 'Y' if done else 'N'
-        task_done = raw_input("Is this task done? (Y/n):(prev: "+ donestring +" ) ").strip()
+        task_done = input("Is this task done? (Y/n):(prev: "+ donestring +" ) ").strip()
         if task_done and (task_done[0] in 'Yy'):
             done = True
         elif task_done and (task_done[0] in 'Nn'):
             done = False
         else:
-            print "Not a valid answer, so not changing the status of the task."
-
+            print("Not a valid answer, so not changing the status of the task."
+)
         return (end_time, done)
 
     def print_elapsed(self):

@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from utils import DATE_FORMAT, print_todo_item
+from lib.utils import DATE_FORMAT, print_todo_item
 from clint.textui import colored
 
 class Schedule(object):
@@ -20,7 +20,7 @@ class Schedule(object):
             updated_time = datetime.strptime(self._schedule['UPDATED'], DATE_FORMAT)
             updated_day = datetime(updated_time.year, updated_time.month, updated_time.day)
             if today == updated_day:
-                print "Not Going to Calculate."
+                print("Not Going to Calculate.")
                 return self._schedule
             else:
                 return self.update_schedule(today)
@@ -89,12 +89,12 @@ class Schedule(object):
         for key in self._order:
             if key in self._schedule.keys():
                 if key == 'UPDATED':
-                    print colored.green(key.replace('_',' ').capitalize()) + ": " + str(self._schedule[key])
+                    print(colored.green(key.replace('_',' ').capitalize()) + ": " + str(self._schedule[key]))
                 else:
                     if key == 'past_due':
-                        print colored.red(key.replace('_',' ').capitalize()) + ": " + "(tasks: "+str(len(self._schedule[key]))+")"
+                        print(colored.red(key.replace('_',' ').capitalize()) + ": " + "(tasks: "+str(len(self._schedule[key]))+")")
                     else:
-                        print colored.blue(key.replace('_',' ').capitalize()) + ": " + "(tasks: "+str(len(self._schedule[key]))+")"
+                        print(colored.blue(key.replace('_',' ').capitalize()) + ": " + "(tasks: "+str(len(self._schedule[key]))+")")
                     for todo in self._schedule[key]:
                         print_todo_item(todo, todo['key'])
-                print "\n"
+                print("\n")

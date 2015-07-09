@@ -1,5 +1,5 @@
 from clint.textui import puts, colored, indent
-from utils import Counter, foreach, print_reward_item
+from lib.utils import Counter, foreach, print_reward_item
 
 class Rewards(object):
 
@@ -28,7 +28,7 @@ class Rewards(object):
         name = self._countername + str(N+1)
         todo = {'reward': reward, 'bounty': bounty, 'redeemed':0}
         res = self._base.put(self._url, name, todo)
-        print res
+        print(res)
         self._update()
 
     def redeem(self, name, times=1):
@@ -41,15 +41,15 @@ class Rewards(object):
         # TODO: Need to find a better way to print responses.
         if name in self._rewards.keys():
             res = self._base.patch(self._url + "/" +  name , newreward)
-            print res
+            print(res)
         else:
-            print "Not Found"
+            print("Not Found")
         self._update()
 
     def delete(self, name):
         if name in self._rewards.keys():
             res = self._base.delete(self._url, name)
-            print res
+            print(res)
         else:
-            print "Not Found. Can't Delete"
+            print("Not Found. Can't Delete")
         self._update()

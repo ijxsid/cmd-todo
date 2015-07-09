@@ -59,7 +59,7 @@ class Goodtable():
         label_border_bottom = "+{data:^{width}}+".format(data='='*(self._max_width/2), width=(self._max_width/2))
         label_border_center = "{data:^{width}}".format(data=label_border_bottom, width=self._max_width)
 
-        print label_border_center + "\n" +label_string_center1 + "\n" + label_border_center
+        print(label_border_center + "\n" +label_string_center1 + "\n" + label_border_center)
 
 
     def _print_header(self):
@@ -78,7 +78,7 @@ class Goodtable():
             col = self._cols[i]
             result_string += '+' + (style*(col))
         result_string += "+"
-        print result_string
+        print(result_string)
 
     def _print_data(self, data):
         result = ''
@@ -89,4 +89,4 @@ class Goodtable():
                 header = header[:width-2] + ">"
             result += "| {data:{width}}".format(data=header, width=width-1)
         result += "|"
-        print result
+        print(result)

@@ -3,4 +3,4 @@ clint==0.4.1
 py==1.4.30
 pytest==2.7.2
 python-firebase==1.2
-requests==1.1.0
+requests==2.7.0

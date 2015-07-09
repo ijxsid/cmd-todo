@@ -1,7 +1,7 @@
-from utils import foreach, print_todo_item, Counter, parse_duestring, DATE_FORMAT
-from timeit import Timer
+from lib.utils import foreach, print_todo_item, Counter, parse_duestring, DATE_FORMAT
+from lib.timeit import Timer
 from clint.textui import colored
-from schedule import Schedule
+from lib.schedule import Schedule
 
 class TodoCollection(object):
 
@@ -24,7 +24,7 @@ class TodoCollection(object):
         return self._structure
 
     def fetch_todos(self):
-        return {key: self._todos[foldername][key] for key, foldername in self._structure.iteritems()}
+        return {key: self._todos[foldername][key] for key, foldername in self._structure.items()}
 
     def fetch_folderwise_todos(self):
         return self._todos
@@ -33,7 +33,7 @@ class TodoCollection(object):
         return self._todos_by_tag()
 
     def get_all(self, tags=None):
-        todos = {key: self._todos[foldername][key] for key, foldername in self._structure.iteritems()}
+        todos = {key: self._todos[foldername][key] for key, foldername in self._structure.items()}
 
         if tags:
             todos = {key: todos[key] for key in todos.keys() if self._is_tagged(key, tags)}
@@ -69,7 +69,7 @@ class TodoCollection(object):
         if not folder or folder ==' ':
             folder = 'MAIN' #Our default folder, uppercase to be unique
         res = self._base.put(self._url + "/" + folder, name, todo)
-        print res
+        print(res)
         self._update()
 
     def markdone(self, name):
@@ -84,18 +84,18 @@ class TodoCollection(object):
             if 'due' in newtodo.keys():
                 newtodo['due'] = newtodo["due"].strftime(DATE_FORMAT)
             res = self._base.patch(self._url + "/" + foldername + "/" + name , newtodo)
-            print res
+            print(res)
         else:
-            print "Not Found"
+            print("Not Found")
         self._update()
 
     def delete(self, name):
         if name in self._structure.keys():
             foldername = self._structure[name]
             res = self._base.delete(self._url + '/' + foldername, name)
-            print res
+            print(res)
         else:
-            print "Not Found. Can't Delete"
+            print("Not Found. Can't Delete")
         self._update()
 
     def move_to_folder(self, foldername, key):
@@ -104,24 +104,24 @@ class TodoCollection(object):
             todo = self._todos[src_foldername][key]
             self.delete(key)
             res = self._base.put(self._url + "/" + foldername, key, todo)
-            print res
+            print(res)
             self._structure[key] = foldername
 
 
     def delete_folder(self, foldername):
         if foldername == 'MAIN':
-            print "Cannot delete default folder."
+            print("Cannot delete default folder.")
         elif foldername in self._todos.keys():
             keys_to_delete = []
-            for key, value in self._structure.iteritems():
+            for key, value in self._structure.items():
                 if value == foldername:
                     keys_to_delete.append(key)
             for key in keys_to_delete:
                 del self._structure[key]
             res = self._base.delete(self._url, foldername)
-            print res
+            print(res)
         else:
-            print "Folder not found"
+            print("Folder not found")
 
 
     def _is_tagged(self, key, tags):
@@ -155,7 +155,7 @@ class TodoCollection(object):
                 newtodo['done'] = done
             self.edit(name, newtodo)
         else:
-            print "This todo doesn't exist"
+            print("This todo doesn't exist")
 
     def reset_timer_for_todo(self, name):
         if name in self._structure.keys():
@@ -177,7 +177,7 @@ class TodoCollection(object):
 
                 self.edit(name, {'due': snooze.strftime(DATE_FORMAT)})
             else:
-                print colored.red("This todo doesn't exist. Please check the spelling.")
+                print(colored.red("This todo doesn't exist. Please check the spelling."))
         except ValueError:
             ValueError(colored.red("Bad Snooze Fomat: Expected Formats (due_rules  or YYYY-MM-DD)"))
 

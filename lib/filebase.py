@@ -1,7 +1,7 @@
 from firebase import firebase
 import json
 import os
-from utils import remove_common_elements, generate_unique_code
+from lib.utils import remove_common_elements, generate_unique_code
 
 class FileBaseApplication(object):
     def __init__(self, firebase_URL, opfile='data.json', changes_file='changes.json'):
@@ -20,11 +20,11 @@ class FileBaseApplication(object):
     def _get_data(self):
 
         if os.path.isfile(self._opfile):
-            print "file found"
+            print( "file found")
             with open(self._opfile) as data_file:
                 data = json.load(data_file)
         else:
-            print "file not found"
+            print("file not found")
             self._pull_data()
                 
         return data
@@ -40,13 +40,13 @@ class FileBaseApplication(object):
         result = self._data
         for comp in url_components:
             if comp not in result.keys():
-                result[comp] = None
+                result[comp] = {}
             result = result[comp]
-        
         return result
+    
     def _add_to_changes(self, change, url):
         if change not in  ["ADD", "EDIT", "DELETE"]:
-            print "Invalid Change String"
+            print("Invalid Change String")
             raise ValueError("Invalid Change String... Use one of ADD, EDIT or DELETE")
         if change in self._changes.keys():
             if url not in self._changes[change]:
@@ -55,7 +55,7 @@ class FileBaseApplication(object):
             self._changes[change] = [url]
             
     def _add_url_and_name(self, url, name):
-        url_components = filter(lambda x: x != '', url.split("/"))
+        url_components = list(filter(lambda x: x != '', url.split("/")))
         result_url = ""
         if url_components:
             result_url +=  "/" + "/".join(url_components)
@@ -63,7 +63,7 @@ class FileBaseApplication(object):
         return result_url
     
     def _get_name_from_url(self, url):
-        url_components = filter(lambda x: x != '', url.split("/"))
+        url_components = list(filter(lambda x: x != '', url.split("/")))
         name = url_components[-1]
         url_res = "/" + "/".join(url_components[:-1])
         return (url_res, name)
@@ -79,7 +79,6 @@ class FileBaseApplication(object):
     
     def put(self, url, name, data):
         result = self._get_data_from_url(url)
-
         result[name] = data
         full_url = self._add_url_and_name(url, name)
         self._add_to_changes("ADD", full_url)

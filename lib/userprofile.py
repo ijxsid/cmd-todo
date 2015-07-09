@@ -1,6 +1,6 @@
 from clint.textui import puts, indent, colored, progress
-from goodtable import Goodtable
-from profile_editor import ProfileEditor
+from lib.goodtable import Goodtable
+from lib.profile_editor import ProfileEditor
 class Profile(object):
 
     def __init__(self, base, url, todos, rewards):
@@ -31,7 +31,7 @@ class Profile(object):
         self._profile['info'] = new_info
         res = self._base.put(self._url, 'me', self._profile)
 
-        print res
+        print(res)
 
 
     def _calculate_points(self, todos, main=False):
@@ -67,10 +67,10 @@ class Profile(object):
         prints out user Dashboard.
         """
         if 'info' in self._profile.keys():
-            print "="*80
-            print "Name: " + self._profile['info']['name']
-            print "Email: " + self._profile['info']['email']
-            print "="*80
+            print("="*80)
+            print("Name: " + self._profile['info']['name'])
+            print("Email: " + self._profile['info']['email'])
+            print("="*80)
         table = Goodtable([30, 50], "Your Dashboard")
         table.add_row(['Total Tasks', str(self._profile['total_items'])] )
         table.add_row(['Total Done', str(self._profile['done'])])
@@ -88,13 +88,13 @@ class Profile(object):
 
         folderstable = Goodtable([80], "Folders/Projects Progress")
         folderstable.print_table()
-        print "\n"
+        print("\n")
         self._print_dash(folder=True)
 
-        print "\n\n"
+        print( "\n\n")
         tagstable = Goodtable([80], 'Tags Progress')
         tagstable.print_table()
-        print "\n"
+        print( "\n")
         self._print_dash(folder=False)
 
     def _print_dash(self, folder=True):

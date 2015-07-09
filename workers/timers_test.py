@@ -12,7 +12,7 @@ def main():
         print('{}'.format('goto ' + str(i)))
         sys.stdout.write(MOVE_CURSOR_UP)
         time.sleep(1)
-    print
+    print()
 
 if __name__ == '__main__':
     main()

@@ -67,7 +67,7 @@ def main():
     editor = TodoEditor(todos)
     user = Profile(todobase, '/profile', todos, rewards)
 
-    print args
+    print(args)
 
     if args.folder and args.folder[0] is None:
         args.folder = ['MAIN']
@@ -142,8 +142,8 @@ def main():
             if len(args.delete) == 1:
                 todos.delete_folder(args.delete[0])
             else:
-                print "Cannot delete multiple Folders at once.\
-                       \nDelete one by one."
+                print( "Cannot delete multiple Folders at once.\
+                       \nDelete one by one.")
         else:
             if isinstance(args.delete, str):
                 todos.delete(args.delete)
@@ -174,7 +174,7 @@ def main():
         puts(APP_COPYRIGHT)
     elif args.structure:
         structure = todos.fetch_structure()
-        print structure
+        print(structure)
 
     elif args.schedule:
         schedule = Schedule(todobase, todos.fetch_todos())

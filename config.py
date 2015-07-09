@@ -7,7 +7,7 @@ def get_config(config_file='config.json'):
             data = json.load(data_file)
         return data
     else:
-        print "Config File not Found"
+        print("Config File not Found")
         exit()
 
 def save_config(data, config_file='config.json'):
