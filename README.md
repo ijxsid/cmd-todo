@@ -3,7 +3,7 @@
 
 Manage your todos from command line.
 
-Current Version is 0.5alpha3 called "Warbler".
+Current Version is 0.5beta1 called "Scrub-Jay".
 
 ## RoadMap
 
@@ -24,10 +24,10 @@ Current Version is 0.5alpha3 called "Warbler".
   - timers.
   - User Dashboard in command line.
   - dynamic folders.
+  - Offline Support
 
   ### Features (In Development)
   - Assigning to the other people.
-  - Offline Support
   - Team project Management.
   - Wiki Help.
   - Testing.
