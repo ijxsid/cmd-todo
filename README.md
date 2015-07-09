@@ -25,16 +25,20 @@ Current Version is 0.5beta1 called "Scrub-Jay".
   - User Dashboard in command line.
   - dynamic folders.
   - Offline Support
+  - Move to Python3
+  - Wiki Help.
 
-  ### Features (In Development)
+  ### Features(WIP) coming with 0.5beta2 "Dove"
+  - Testing.
+  - Quadrant System for Task Management
+  - Task Search.
+  
+  ### Features (Cold Storage) on road for 0.5beta3 "Verdin"
   - Assigning to the other people.
   - Team project Management.
-  - Wiki Help.
-  - Testing.
   - User Accounts
   - Team Accounts.
-  - Quadant System for Task Management
-  - Task Search.
+  
 
 
 
@@ -292,7 +296,12 @@ introduced below.
  python todo.py -V/--version
  ```
 
-
+### 12. Syncing to Firebase.
+ > cmd-todo comes with inbuilt firebase support. To sync to firebase, use --sync command.
+ 
+ ```bash
+ python todo.py --sync
+ ```
 __NOTE__: There are lot more features coming and somedays we will move most of this help somewhere else.
 
 
