@@ -137,3 +137,9 @@ def remove_common_elements(list1, list2, list3=None):
     if list3 is not None:
         list3_res = list(set(list3) - common_set)
     return (list1_res, list2_res, list3_res)
+    
+def generate_unique_code(length=10):
+    code = ''
+    for i in range(length):
+        code += chr(random.randint(97, 122))
+    return code

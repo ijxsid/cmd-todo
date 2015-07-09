@@ -1,7 +1,7 @@
 venv/
-config.py*
 *.pyc
 table_user.py
 temp.json
 data.json
 changes.json
+config.json

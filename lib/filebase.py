@@ -1,7 +1,7 @@
 from firebase import firebase
 import json
 import os
-from utils import remove_common_elements
+from utils import remove_common_elements, generate_unique_code
 
 class FileBaseApplication(object):
     def __init__(self, firebase_URL, opfile='data.json', changes_file='changes.json'):
@@ -40,7 +40,7 @@ class FileBaseApplication(object):
         result = self._data
         for comp in url_components:
             if comp not in result.keys():
-                result[comp] = {}
+                result[comp] = None
             result = result[comp]
         
         return result
@@ -70,8 +70,11 @@ class FileBaseApplication(object):
         
     def get(self, url, name=None):
         result = self._get_data_from_url(url)
-        result = result[name] if name is not None else result
-        
+        if name is not None:
+            if name not in result.keys():
+                result[name] = None
+            result = result[name]
+         
         return result
     
     def put(self, url, name, data):
@@ -144,6 +147,12 @@ class FileBaseApplication(object):
         self._process_changes()
         os.remove(self._chfile)
         self._pull_data()
+    
+    def get_unique_counter_code(self):
+        code = generate_unique_code(4)
+        while code in self._data["counter"].keys():
+            code = generate_unique_code(4)
+        return code
         
         
         

@@ -3,9 +3,10 @@ from utils import Counter, foreach, print_reward_item
 
 class Rewards(object):
 
-    def __init__(self, base, url, countername='rewardcount'):
+    def __init__(self, base, url, countername='rwcnt'):
         self._base = base
         self._url = url
+        self._countername = countername
         self._rewards = self._base.get(url, None)
         self._counter = Counter(countername, self._base)
 
@@ -24,7 +25,7 @@ class Rewards(object):
 
     def add(self, reward, bounty):
         N = self._counter.get()
-        name = 'rw' + str(N+1)
+        name = self._countername + str(N+1)
         todo = {'reward': reward, 'bounty': bounty, 'redeemed':0}
         res = self._base.put(self._url, name, todo)
         print res

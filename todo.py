@@ -11,8 +11,10 @@ from lib.schedule import Schedule
 from lib.filebase import FileBaseApplication
 import info
 
+config_file = 'config.json'
 
-todobase = FileBaseApplication(config.FIREBASE_URL)
+CONFIG = config.get_config(config_file)
+todobase = FileBaseApplication(CONFIG["FIREBASE_URL"])
 _version = info.VERSION
 
 
@@ -51,8 +53,17 @@ def main():
 
 
     args = parser.parse_args()
-    todos = TodoCollection(todobase, '/todos', 'todo')
-    rewards = Rewards(todobase, '/rewards', 'reward')
+    
+    if not "TODO_COUNTER_CODE" in CONFIG.keys():
+        CONFIG["TODO_COUNTER_CODE"] = todobase.get_unique_counter_code()
+        config.save_config(CONFIG, config_file)
+    
+    if not "REWARD_COUNTER_CODE" in CONFIG.keys():
+        CONFIG["REWARD_COUNTER_CODE"] = todobase.get_unique_counter_code()
+        config.save_config(CONFIG, config_file)
+    
+    todos = TodoCollection(todobase, '/todos', CONFIG["TODO_COUNTER_CODE"])
+    rewards = Rewards(todobase, '/rewards', CONFIG["REWARD_COUNTER_CODE"])
     editor = TodoEditor(todos)
     user = Profile(todobase, '/profile', todos, rewards)
 

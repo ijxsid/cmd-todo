@@ -9,6 +9,7 @@ class TodoCollection(object):
         self._base = base
         self._url = url
         self._todos = self._base.get(url, None)
+        self._countername = countername
         self._counter = Counter(countername, self._base)
         self._structure = self._make_folder_structure(self._todos)
         self._schedule = Schedule(self._base, self.fetch_todos())
@@ -59,7 +60,7 @@ class TodoCollection(object):
         assert isinstance(bounty, int)
         assert isinstance(tags, list)
         N = self._counter.get()
-        name = 'todo' + str(N+1)
+        name = self._countername + str(N+1)
         todo = {'task': task, 'bounty': bounty, 'done': False}
         if duetime is not None:
             todo['due'] = duetime.strftime(DATE_FORMAT)
