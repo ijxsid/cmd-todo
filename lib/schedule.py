@@ -9,14 +9,14 @@ class Schedule(object):
         self.NAME = 'schedule'
         self._todos = todos
         self._schedule = self._base.get('/'+ self.NAME, None)
-        self._order = ['UPDATED', 'today', 'tommorrow', 'this_week', 'next_week'
+        self._order = ['UPDATED', 'today', 'tommorrow', 'this_week', 'next_week',
                        'later_this_month', 'later_this_year', 'future', 'past_due']
 
     def create_dynamic_folder_structure(self):
 
         now = datetime.now()
         today = datetime(now.year, now.month, now.day)
-        if self._schedule is not None and self._schedule['UPDATED'] is not None:
+        if self._schedule is not None and 'UPDATED' in self._schedule.keys() and self._schedule['UPDATED'] is not None:
             updated_time = datetime.strptime(self._schedule['UPDATED'], DATE_FORMAT)
             updated_day = datetime(updated_time.year, updated_time.month, updated_time.day)
             if today == updated_day:

@@ -52,7 +52,7 @@ def print_todo_item(item, key=None):
     prints an todo item.
     """
     if item is not None:
-        donestring = colored.green((u'\u2713').encode('utf-8'))
+        donestring = colored.green(chr(0x2714))
         puts( str(key) + " : "+colored.blue(str(item['bounty'])) + " : " + item['task']
              + " " + (donestring if item['done'] else ''))
     else:
