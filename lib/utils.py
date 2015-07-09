@@ -120,11 +120,10 @@ def clean_tags(tags):
             res.append(match.group(1).lower())
     return res
 
+
 def clean_foldername(foldername):
-    pattern = re.compile(r'\s*(\w*)')
-    match = pattern.match(foldername)
-    res = match.group(1)
-    return res.lower()
+    return foldername.strip().lower()
+
 
 def remove_common_elements(list1, list2, list3=None):
     if list3 is None:
