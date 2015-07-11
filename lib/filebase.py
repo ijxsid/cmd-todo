@@ -32,8 +32,8 @@ class FileBaseApplication(object):
                 data = json.load(data_file)
         else:
             print("file not found")
-            self._pull_data()
-                
+            # self._pull_data()
+            return self._firebase.get('/', None)    
         return data
     
     def _pull_data(self):
@@ -177,9 +177,9 @@ class FileBaseApplication(object):
 
     
     def sync(self):
-        # self._minimize_changes()
-        # self._process_changes()
-        # os.remove(self._chfile)
+        self._minimize_changes()
+        self._process_changes()
+        os.remove(self._chfile)
         self._pull_data()
     
     def get_unique_counter_code(self):
