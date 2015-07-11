@@ -41,16 +41,13 @@ class FileBaseApplication(object):
             # Get the highest key you have
             edit_keys = map(int, self._data["edits"].keys())
             max_edit_key = max(edit_keys)
-            print("max_edit_key -> ", max_edit_key)
             firebase_edits = self._firebase.get('/edits', None)
             firebase_edit_keys = map(int, firebase_edits.keys())
             max_firebase_edit_key = max(firebase_edit_keys)
-            print("max_firebase_edit_key -> ", max_firebase_edit_key)
             if max_edit_key <  max_firebase_edit_key:
                 edits_to_apply = {key: firebase_edits[key] for key in firebase_edits.keys() if int(key) > max_edit_key}
                 self._apply_edits(edits_to_apply)
             
-            # Apply anything higher than that.
         with open(self._opfile, 'w') as outfile:
             json.dump(data, outfile)
         
@@ -73,9 +70,6 @@ class FileBaseApplication(object):
         delete_set = delete_set - common_set
         
         # Apply the remaining changes.
-        print("insert_set =>", insert_set)
-        print("delete_set =>", delete_set)
-        
         for inserted_item in insert_set:
             print("inserting ", inserted_item)
             url, name = self._get_name_from_url(inserted_item)
@@ -137,7 +131,6 @@ class FileBaseApplication(object):
         result = self._get_data_from_url(url)
         result[name] = data
         full_url = self._add_url_and_name(url, name)
-        print("self.changes => ", self)
         if log:
             self._add_to_changes("ADD", full_url, changes=self._changes)
         
@@ -206,9 +199,7 @@ class FileBaseApplication(object):
                 self._add_to_changes("DELETE", d, self._changes_firebase)
                 
             if self._changes_firebase:
-                print("changes_firebase ", self._changes_firebase)
                 editnumber = self._firebase.get('/counter', 'edits') + 1
-                print("editnumber =>", editnumber)
                 self._firebase.put('/counter', 'edits', editnumber)
                 self._firebase.put('/edits', editnumber, self._changes_firebase)
                 self.put('/edits',str(editnumber), self._changes_firebase)
