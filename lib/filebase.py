@@ -222,6 +222,7 @@ class FileBaseApplication(object):
         self._minimize_changes()
         self._process_changes()
         os.remove(self._chfile)
+        os.remove(self._changes_firebase_file)
         self._pull_data()
     
     def get_unique_counter_code(self):
