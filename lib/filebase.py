@@ -166,7 +166,7 @@ class FileBaseApplication(object):
                 url_res, name_res = self._get_name_from_url(d)
                 self._firebase.delete(url_res, name_res)
                 self._add_to_changes("DELETE", d, self._changes_firebase)
-            
+            self._firebase.put('/counter', 'edits', editnumber)
             self._firebase.put('/edits', editnumber, self._changes_firebase)
         except Exception as e:
             with open(self._changes_firebase_file, 'w') as outfile:
