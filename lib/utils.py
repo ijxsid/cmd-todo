@@ -37,6 +37,7 @@ class Counter(object):
             self._todobase.put('/counter', self._name, self._count)
 
     def get(self):
+        print("self._count =>", self._count)
         self._count += 1
         self._todobase.put('/counter', self._name, self._count)
         return self._count

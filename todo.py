@@ -9,12 +9,15 @@ from lib.todoeditor import TodoEditor
 from lib.rewards import Rewards
 from lib.schedule import Schedule
 from lib.filebase import FileBaseApplication
+from lib.utils import Counter
 import info
 
 config_file = 'config.json'
 
 CONFIG = config.get_config(config_file)
 todobase = FileBaseApplication(CONFIG["FIREBASE_URL"])
+edit_counter = Counter('edits', todobase)
+todobase.set_edit_counter(edit_counter)
 _version = info.VERSION
 
 
