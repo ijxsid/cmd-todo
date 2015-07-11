@@ -22,8 +22,6 @@ class FileBaseApplication(object):
             with open(self._changes_firebase_file) as changes_file:
                 self._changes_firebase = json.load(changes_file)
     
-    def set_edit_counter(self, counter):
-        self._edit_counter = counter
     def _get_data(self):
 
         if os.path.isfile(self._opfile):
@@ -149,7 +147,7 @@ class FileBaseApplication(object):
     
     def _process_changes(self):
         try:
-            editnumber = self._edit_counter.get()
+            editnumber = self._firebase.get('/counter', 'edits') + 1
             print("editnumber =>", editnumber)
             
             print("applying changes....")

@@ -17,7 +17,6 @@ config_file = 'config.json'
 CONFIG = config.get_config(config_file)
 todobase = FileBaseApplication(CONFIG["FIREBASE_URL"])
 edit_counter = Counter('edits', todobase)
-todobase.set_edit_counter(edit_counter)
 _version = info.VERSION
 
 
