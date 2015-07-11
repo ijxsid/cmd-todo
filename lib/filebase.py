@@ -210,7 +210,7 @@ class FileBaseApplication(object):
                 print("editnumber =>", editnumber)
                 self._firebase.put('/counter', 'edits', editnumber)
                 self._firebase.put('/edits', editnumber, self._changes_firebase)
-                self.put('/edits', editnumber, self._changes_firebase)
+                self.put('/edits',str(editnumber), self._changes_firebase)
         except Exception as e:
             with open(self._changes_firebase_file, 'w') as outfile:
                 json.dump(self._changes_firebase, outfile)
