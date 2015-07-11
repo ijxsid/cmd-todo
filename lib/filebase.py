@@ -187,8 +187,6 @@ class FileBaseApplication(object):
     
     def _process_changes(self):
         try:
-            editnumber = self._firebase.get('/counter', 'edits') + 1
-            print("editnumber =>", editnumber)
             
             print("applying changes....")
             inserts = self._changes["ADD"] if "ADD" in self._changes.keys() else []
@@ -206,8 +204,13 @@ class FileBaseApplication(object):
                 url_res, name_res = self._get_name_from_url(d)
                 self._firebase.delete(url_res, name_res)
                 self._add_to_changes("DELETE", d, self._changes_firebase)
-            self._firebase.put('/counter', 'edits', editnumber)
-            self._firebase.put('/edits', editnumber, self._changes_firebase)
+                
+            if self._changes_firebase:
+                editnumber = self._firebase.get('/counter', 'edits') + 1
+                print("editnumber =>", editnumber)
+                self._firebase.put('/counter', 'edits', editnumber)
+                self._firebase.put('/edits', editnumber, self._changes_firebase)
+                self.put('/edits', editnumber, self._changes_firebase)
         except Exception as e:
             with open(self._changes_firebase_file, 'w') as outfile:
                 json.dump(self._changes_firebase, outfile)
