@@ -221,8 +221,10 @@ class FileBaseApplication(object):
     def sync(self):
         self._minimize_changes()
         self._process_changes()
-        os.remove(self._chfile)
-        os.remove(self._changes_firebase_file)
+        if os.path.isfile(self._chfile):
+            os.remove(self._chfile)
+        if os.path.isfile(self._changes_firebase_file):
+            os.remove(self._changes_firebase_file)
         self._pull_data()
     
     def get_unique_counter_code(self):
