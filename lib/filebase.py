@@ -49,7 +49,7 @@ class FileBaseApplication(object):
             max_firebase_edit_key = max(firebase_edit_keys)
             print("max_firebase_edit_key -> ", max_firebase_edit_key)
             if max_edit_key <  max_firebase_edit_key:
-                print "Neeed to apply changes"
+                print("Need to apply changes")
             
             # Apply anything higher than that.
         with open(self._opfile, 'w') as outfile:
