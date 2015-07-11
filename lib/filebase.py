@@ -206,6 +206,7 @@ class FileBaseApplication(object):
                 self._add_to_changes("DELETE", d, self._changes_firebase)
                 
             if self._changes_firebase:
+                print("changes_firebase ", self._changes_firebase)
                 editnumber = self._firebase.get('/counter', 'edits') + 1
                 print("editnumber =>", editnumber)
                 self._firebase.put('/counter', 'edits', editnumber)
