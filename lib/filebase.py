@@ -47,12 +47,49 @@ class FileBaseApplication(object):
             max_firebase_edit_key = max(firebase_edit_keys)
             print("max_firebase_edit_key -> ", max_firebase_edit_key)
             if max_edit_key <  max_firebase_edit_key:
-                print("Need to apply changes")
+                edits_to_apply = {key: firebase_edits[key] for key in firebase_edits.keys() if int(key) > max_edit_key}
+                self._apply_edits(edits_to_apply)
             
             # Apply anything higher than that.
         with open(self._opfile, 'w') as outfile:
             json.dump(data, outfile)
         
+    def _apply_edits(self, edits):
+        insert_set = set()
+        delete_set = set()
+        for key, edit in edits.items():
+            if "ADD" in edit.keys():
+                for inserted_item in edit["ADD"]:
+                    insert_set.add(inserted_item)
+            if "DELETE" in edit.keys():
+                for deleted_item in edit["DELETE"]:
+                    delete_set.add(deleted_item)
+            self.put('/edits', key, edit, log=False)
+        
+        # Delete common elements from both sets
+        
+        common_set = insert_set.intersection(delete_set)
+        insert_set = insert_set - common_set
+        delete_set = delete_set - common_set
+        
+        # Apply the remaining changes.
+        print("insert_set =>", insert_set)
+        print("delete_set =>", delete_set)
+        
+        for inserted_item in insert_set:
+            print("inserting ", inserted_item)
+            url, name = self._get_name_from_url(inserted_item)
+            data = self._firebase.get(url, name)
+            self.put(url, name, data, log=False)
+        for deleted_item in delete_set:
+            print("deleting ", deleted_item)
+            url, name = self._get_name_from_url(deleted_item)
+            self.delete(url, name, log=False)
+            
+        
+        
+        
+                
     def _get_data_from_url(self, url):
         url_components = filter(lambda x: x != '', url.split("/"))
                 
@@ -87,7 +124,7 @@ class FileBaseApplication(object):
         url_res = "/" + "/".join(url_components[:-1])
         return (url_res, name)
         
-    def get(self, url, name=None):
+    def get(self, url, name=None, log=True):
         result = self._get_data_from_url(url)
         if name is not None:
             if name not in result.keys():
@@ -96,27 +133,30 @@ class FileBaseApplication(object):
          
         return result
     
-    def put(self, url, name, data):
+    def put(self, url, name, data, log=True):
         result = self._get_data_from_url(url)
         result[name] = data
         full_url = self._add_url_and_name(url, name)
         print("self.changes => ", self)
-        self._add_to_changes("ADD", full_url, changes=self._changes)
+        if log:
+            self._add_to_changes("ADD", full_url, changes=self._changes)
         
-    def patch(self, url, newdata):
+    def patch(self, url, newdata, log=True):
         result = self._get_data_from_url(url)
         
         for key in newdata.keys():
             result[key] = newdata[key]
         
-        self._add_to_changes("EDIT", url, changes=self._changes)
+        if log:
+            self._add_to_changes("EDIT", url, changes=self._changes)
+    def delete(self, url, name, log=True):
         
-    def delete(self, url, name):
         result = self._get_data_from_url(url)
         
         del result[name]
         full_url = self._add_url_and_name(url, name)
-        self._add_to_changes("DELETE", full_url, changes=self._changes)
+        if log:
+            self._add_to_changes("DELETE", full_url, changes=self._changes)
 
     def save(self):
         with open(self._opfile, 'w') as outfile:
