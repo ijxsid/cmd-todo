@@ -305,8 +305,3 @@ introduced below.
 __NOTE__: There are lot more features coming and somedays we will move most of this help somewhere else.
 
 
-
-
-Many of the cool stuff coming soon. (Airbase.IO)
-
-&copy; 2015 Airbase
